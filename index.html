@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Iron & Function" />
+  <meta name="theme-color" content="#0d0d0d" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>Iron & Function</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --bg2: #141414;
+      --bg3: #1a1a1a;
+      --border: #242424;
+      --border2: #2e2e2e;
+      --text: #ede8e1;
+      --text2: #a09890;
+      --text3: #625c57;
+      --orange: #e8550a;
+      --orange2: #ff6b1a;
+      --blue: #0077b6;
+      --purple: #7b2d8b;
+      --green: #1b7a2e;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding-top: var(--safe-top);
+      display: flex; align-items: center; gap: 0;
+    }
+    .nav-tab {
+      flex: 1; padding: 14px 6px 12px;
+      background: none; border: none; cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text3); transition: color 0.2s;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .nav-tab .icon { font-size: 18px; }
+    .nav-tab.active { color: var(--orange); }
+    .nav-tab.active .icon { filter: drop-shadow(0 0 6px var(--orange)); }
+
+    /* ── PAGES ── */
+    .page { display: none; padding-top: calc(var(--safe-top) + 60px); padding-bottom: calc(var(--safe-bottom) + 80px); min-height: 100vh; }
+    .page.active { display: block; }
+
+    /* ── HEADER ── */
+    .hero {
+      background: linear-gradient(160deg, #1a1008 0%, var(--bg) 60%);
+      padding: 28px 20px 24px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(232,85,10,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; letter-spacing: 4px; color: var(--text3);
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 14vw, 72px);
+      line-height: 0.9; letter-spacing: 2px;
+      color: var(--text);
+    }
+    .hero-title span { color: var(--orange); }
+    .hero-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; color: var(--text3); margin-top: 10px;
+      letter-spacing: 1px;
+    }
+    .stat-row { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+    .stat-chip {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border2);
+      border-radius: 8px; padding: 7px 12px;
+    }
+    .stat-chip .k {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase;
+    }
+    .stat-chip .v {
+      font-size: 14px; font-weight: 700; color: var(--orange); margin-top: 2px;
+    }
+
+    /* ── SECTION ── */
+    .section { padding: 0 16px; margin-top: 24px; }
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 3px; color: var(--text3);
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+
+    /* ── WEEK / SESSION TOGGLES ── */
+    .toggle-row { display: flex; gap: 8px; margin-bottom: 14px; }
+    .toggle-btn {
+      flex: 1; padding: 11px 8px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px; letter-spacing: 2px;
+      color: var(--text3); transition: all 0.2s;
+    }
+    .toggle-btn.active {
+      background: var(--orange); border-color: var(--orange);
+      color: #fff;
+    }
+    .session-btn {
+      flex: 1; padding: 10px 8px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer;
+      text-align: left; transition: all 0.2s;
+    }
+    .session-btn .sid {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    }
+    .session-btn .stag {
+      font-size: 11px; font-weight: 700; color: var(--text3);
+      margin-top: 3px; line-height: 1.2;
+    }
+    .session-btn.active .stag { color: var(--text); }
+
+    /* ── BLOCK ACCORDION ── */
+    .block-wrap { margin-bottom: 10px; }
+    .block-header {
+      width: 100%; background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 13px 16px;
+      cursor: pointer; text-align: left;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: all 0.2s;
+    }
+    .block-header.open { border-radius: 12px 12px 0 0; }
+    .block-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 3px;
+    }
+    .block-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .block-chevron {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--text2);
+      flex-shrink: 0; transition: all 0.2s;
+    }
+    .block-body {
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      overflow: hidden;
+    }
+
+    /* ── EXERCISE ROW ── */
+    .ex-row {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 10px;
+    }
+    .ex-row:last-child { border-bottom: none; }
+    .ex-name { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .ex-note { font-size: 11px; color: var(--text3); margin-top: 3px; font-style: italic; }
+    .ex-actions { display: flex; gap: 8px; margin-top: 7px; align-items: center; flex-wrap: wrap; }
+    .watch-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 20px;
+      border: 1px solid; background: transparent;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; font-weight: 500; letter-spacing: 1px;
+      cursor: pointer; text-decoration: none; transition: opacity 0.15s;
+    }
+    .watch-btn:active { opacity: 0.7; }
+    .timer-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--text2);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; letter-spacing: 1px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .timer-btn:active { opacity: 0.7; }
+    .ex-right { text-align: right; flex-shrink: 0; }
+    .ex-sets {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px; letter-spacing: 1px; line-height: 1;
+    }
+    .ex-load {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; color: var(--text3); margin-top: 2px;
+    }
+
+    /* ── REST TIMER OVERLAY ── */
+    .timer-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.92);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .timer-overlay.visible { opacity: 1; pointer-events: all; }
+    .timer-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; letter-spacing: 3px; color: var(--text3);
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+    .timer-exercise {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; letter-spacing: 2px; color: var(--orange);
+      margin-bottom: 32px; text-align: center; padding: 0 30px;
+    }
+    .timer-ring-wrap { position: relative; width: 220px; height: 220px; margin-bottom: 32px; }
+    .timer-ring { transform: rotate(-90deg); }
+    .timer-track { fill: none; stroke: var(--border2); stroke-width: 8; }
+    .timer-progress {
+      fill: none; stroke: var(--orange); stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 628; stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear, stroke 0.3s;
+    }
+    .timer-progress.urgent { stroke: #ff3a3a; }
+    .timer-number {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 72px; letter-spacing: 2px; color: var(--text);
+    }
+    .timer-controls { display: flex; gap: 14px; }
+    .t-btn {
+      padding: 14px 28px; border-radius: 12px; border: none;
+      cursor: pointer; font-family: 'DM Mono', monospace;
+      font-size: 12px; font-weight: 500; letter-spacing: 1px;
+      text-transform: uppercase; transition: all 0.15s;
+    }
+    .t-btn.primary { background: var(--orange); color: #fff; }
+    .t-btn.secondary { background: var(--bg3); color: var(--text2); }
+    .t-btn:active { transform: scale(0.96); }
+    .timer-presets { display: flex; gap: 8px; margin-bottom: 28px; }
+    .preset-btn {
+      padding: 7px 14px; border-radius: 20px;
+      border: 1px solid var(--border2); background: var(--bg2);
+      color: var(--text3); cursor: pointer;
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      transition: all 0.15s;
+    }
+    .preset-btn.sel { border-color: var(--orange); color: var(--orange); background: rgba(232,85,10,0.1); }
+
+    /* ── LOG PAGE ── */
+    .log-header { padding: 24px 20px 0; }
+    .log-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 40px; letter-spacing: 2px;
+    }
+    .log-title span { color: var(--orange); }
+    .log-empty {
+      text-align: center; padding: 60px 30px;
+      color: var(--text3); font-size: 14px; line-height: 1.7;
+    }
+    .log-empty .big { font-family: 'Bebas Neue', sans-serif; font-size: 56px; display: block; margin-bottom: 12px; color: var(--border2); }
+    .log-entry {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+    }
+    .log-entry-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 2px; color: var(--text3); margin-bottom: 6px;
+    }
+    .log-entry-session { font-size: 15px; font-weight: 700; }
+    .log-entry-detail { font-size: 12px; color: var(--text2); margin-top: 4px; }
+    .log-btn {
+      width: 100%; padding: 14px; border-radius: 12px;
+      border: none; background: var(--orange); color: #fff;
+      font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px;
+      cursor: pointer; margin-top: 16px; transition: opacity 0.15s;
+    }
+    .log-btn:active { opacity: 0.85; }
+
+    /* ── PROGRESS PAGE ── */
+    .prog-header { padding: 24px 20px 0; }
+    .prog-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 40px; letter-spacing: 2px;
+    }
+    .prog-title span { color: var(--orange); }
+    .prog-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px; margin-bottom: 10px;
+    }
+    .prog-card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 2px; color: var(--text3);
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .prog-stat-row { display: flex; gap: 10px; }
+    .prog-stat {
+      flex: 1; background: var(--bg3); border-radius: 8px; padding: 10px 12px;
+    }
+    .prog-stat .ps-label { font-size: 10px; color: var(--text3); margin-bottom: 4px; }
+    .prog-stat .ps-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; color: var(--orange); line-height: 1;
+    }
+    .prog-stat .ps-unit { font-size: 11px; color: var(--text3); }
+    .prog-bar-wrap { margin-top: 12px; }
+    .prog-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text2); margin-bottom: 5px; }
+    .prog-bar-track { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: var(--orange); border-radius: 3px; transition: width 0.6s ease; }
+
+    /* ── PROGRESSION PAGE ── */
+    .prog-phase {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 13px 16px; margin-bottom: 8px;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .prog-phase-wk {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; color: var(--orange); font-weight: 500;
+      min-width: 68px; padding-top: 1px;
+    }
+    .prog-phase-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+    /* ── OVERVIEW CARD ── */
+    .overview-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 18px;
+    }
+    .ov-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+    .ov-row:last-child { margin-bottom: 0; }
+    .ov-key {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; color: var(--text3); text-transform: uppercase;
+      letter-spacing: 1.5px; min-width: 84px; padding-top: 2px;
+    }
+    .ov-val { font-size: 13px; color: var(--text2); flex: 1; line-height: 1.5; }
+    .rules-list { list-style: none; padding: 0; }
+    .rules-list li {
+      font-size: 12px; color: var(--text2); line-height: 1.5;
+      padding: 6px 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .rules-list li:last-child { border-bottom: none; }
+    .rules-list li::before { content: '→'; color: var(--orange); flex-shrink: 0; }
+
+    /* ── UPGRADE LIST ── */
+    .upgrade-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .upgrade-item:last-child { border-bottom: none; }
+    .upgrade-arrow { color: var(--orange); font-size: 16px; flex-shrink: 0; }
+    .upgrade-text { font-size: 13px; color: var(--text2); }
+
+    /* ── ALERT NOTE ── */
+    .alert-note {
+      background: rgba(232,85,10,0.06); border: 1px solid rgba(232,85,10,0.2);
+      border-radius: 12px; padding: 14px 16px; margin-top: 16px;
+      font-size: 12px; color: #a09080; line-height: 1.6;
+    }
+    .alert-note strong { color: var(--orange); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 0; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <button class="nav-tab active" onclick="showPage('workout')" id="tab-workout">
+    <span class="icon">🏋️</span>Workout
+  </button>
+  <button class="nav-tab" onclick="showPage('log')" id="tab-log">
+    <span class="icon">📋</span>Log
+  </button>
+  <button class="nav-tab" onclick="showPage('progress')" id="tab-progress">
+    <span class="icon">📈</span>Progress
+  </button>
+  <button class="nav-tab" onclick="showPage('plan')" id="tab-plan">
+    <span class="icon">🗺️</span>Plan
+  </button>
+</nav>
+
+<!-- ════════════════════════════════════════
+     PAGE: WORKOUT
+════════════════════════════════════════ -->
+<div class="page active" id="page-workout">
+  <div class="hero">
+    <div class="hero-label">Athletic Kettlebell Program</div>
+    <div class="hero-title">IRON &<br><span>&</span> FUNCTION</div>
+    <div class="hero-sub">4×/week · Under 60 min · Tap ▶ for video · ⏱ for rest timer</div>
+    <div class="stat-row">
+      <div class="stat-chip"><div class="k">Height</div><div class="v">6′6″</div></div>
+      <div class="stat-chip"><div class="k">Weight</div><div class="v">285 lb</div></div>
+      <div class="stat-chip"><div class="k">Age</div><div class="v">40</div></div>
+      <div class="stat-chip"><div class="k">Load</div><div class="v">2×40 lb</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Training Week</div>
+    <div class="toggle-row">
+      <button class="toggle-btn active" onclick="switchWeek('A')" id="week-A">WEEK A</button>
+      <button class="toggle-btn" onclick="switchWeek('B')" id="week-B">WEEK B</button>
+    </div>
+    <div class="toggle-row" id="session-tabs"></div>
+    <div id="blocks-container"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: LOG
+════════════════════════════════════════ -->
+<div class="page" id="page-log">
+  <div class="log-header">
+    <div class="hero-label">Workout History</div>
+    <div class="log-title">TRAINING <span>LOG</span></div>
+  </div>
+  <div class="section">
+    <button class="log-btn" onclick="logWorkout()">+ LOG TODAY'S SESSION</button>
+    <div id="log-list" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: PROGRESS
+════════════════════════════════════════ -->
+<div class="page" id="page-progress">
+  <div class="prog-header">
+    <div class="hero-label">Your Stats</div>
+    <div class="prog-title">PROGRESS <span>TRACKER</span></div>
+  </div>
+  <div class="section" id="progress-content"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: PLAN
+════════════════════════════════════════ -->
+<div class="page" id="page-plan">
+  <div class="prog-header">
+    <div class="hero-label">Program Details</div>
+    <div class="prog-title">THE <span>PLAN</span></div>
+  </div>
+  <div class="section">
+    <div class="section-label">Program Overview</div>
+    <div class="overview-card">
+      <div class="ov-row"><div class="ov-key">Schedule</div><div class="ov-val">4 days/week — Mon/Tue/Thu/Fri or Mon/Wed/Fri/Sat</div></div>
+      <div class="ov-row"><div class="ov-key">Duration</div><div class="ov-val">45–55 minutes per session</div></div>
+      <div class="ov-row"><div class="ov-key">Structure</div><div class="ov-val">A/B split × 2 — rotate Week A and Week B</div></div>
+      <div class="ov-row"><div class="ov-key">Equipment</div><div class="ov-val">2×40 lb to start; upgrade swings/deadlifts to 53–62 lb as you adapt</div></div>
+    </div>
+  </div>
+  <div class="section" style="margin-top:20px;">
+    <div class="section-label">Session Rules</div>
+    <div class="overview-card">
+      <ul class="rules-list">
+        <li>Open every session with 5 min movement prep — joint circles, hip hinges, goblet squat holds</li>
+        <li>Close every session with 3 min mobility — hip flexor stretch, thoracic rotation, dead bug</li>
+        <li>Rest 60–90 s between sets unless noted otherwise</li>
+        <li>RPE targets: strength work 7–8/10 · conditioning finishers 8–9/10</li>
+      </ul>
+    </div>
+  </div>
+  <div class="section" style="margin-top:20px;">
+    <div class="section-label">Progression Map</div>
+    <div class="prog-phase"><div class="prog-phase-wk">Wks 1–3</div><div class="prog-phase-desc">Technique &amp; baseline — use 40 lb, rest fully, dial in form</div></div>
+    <div class="prog-phase"><div class="prog-phase-wk">Wks 4–6</div><div class="prog-phase-desc">Volume load — add 1 set to each main lift; shorten rest 10 s</div></div>
+    <div class="prog-phase"><div class="prog-phase-wk">Wks 7–9</div><div class="prog-phase-desc">Intensity bump — upgrade swings &amp; deadlifts to 53–62 lb bell</div></div>
+    <div class="prog-phase"><div class="prog-phase-wk">Wk 10</div><div class="prog-phase-desc">Deload — cut volume by 40%, same movements, flush fatigue</div></div>
+    <div class="prog-phase"><div class="prog-phase-wk">Wks 11+</div><div class="prog-phase-desc">Repeat with heavier load across all lifts or add complexity</div></div>
+  </div>
+  <div class="section" style="margin-top:20px;">
+    <div class="section-label">Equipment Upgrades</div>
+    <div class="overview-card">
+      <div class="upgrade-item"><div class="upgrade-arrow">→</div><div class="upgrade-text">53 lb (24 kg) bell — next swing/deadlift progression</div></div>
+      <div class="upgrade-item"><div class="upgrade-arrow">→</div><div class="upgrade-text">62 lb (28 kg) bell — double front squat, clean &amp; press progression</div></div>
+      <div class="upgrade-item"><div class="upgrade-arrow">→</div><div class="upgrade-text">Adjustable KB or rack of 3 bells gives maximal variety</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="alert-note">
+      <strong>Note for tall athletes:</strong> At 6′6″, pay extra attention to hip hinge depth on deadlifts and swings, rack position on cleans, and overhead stability on presses. Prioritize controlled eccentric on all squats. If any bilateral move causes discomfort, substitute the unilateral variation at the same load.
+    </div>
+  </div>
+</div>
+
+<!-- ── REST TIMER OVERLAY ── -->
+<div class="timer-overlay" id="timer-overlay">
+  <div class="timer-label">Rest Timer</div>
+  <div class="timer-exercise" id="timer-exercise-name"></div>
+  <div class="timer-presets">
+    <button class="preset-btn sel" onclick="setPreset(60,this)">60s</button>
+    <button class="preset-btn" onclick="setPreset(90,this)">90s</button>
+    <button class="preset-btn" onclick="setPreset(120,this)">2m</button>
+  </div>
+  <div class="timer-ring-wrap">
+    <svg class="timer-ring" width="220" height="220" viewBox="0 0 220 220">
+      <circle class="timer-track" cx="110" cy="110" r="100"/>
+      <circle class="timer-progress" id="timer-progress" cx="110" cy="110" r="100"/>
+    </svg>
+    <div class="timer-number" id="timer-number">60</div>
+  </div>
+  <div class="timer-controls">
+    <button class="t-btn secondary" onclick="closeTimer()">Cancel</button>
+    <button class="t-btn primary" id="timer-toggle-btn" onclick="toggleTimer()">Start</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const videos = {
+  "Double KB Swing":                   "https://www.youtube.com/watch?v=sSNbzXGsFMo",
+  "KB Push Press":                     "https://www.youtube.com/watch?v=X6CWHGIoXes",
+  "Double Front Squat":                "https://www.youtube.com/watch?v=H1HuYzrNdHk",
+  "Renegade Row":                      "https://www.youtube.com/watch?v=hgf3bSNEsGo",
+  "Odd min: KB Goblet Squat":          "https://www.youtube.com/watch?v=MeIiIdhvXT4",
+  "Even min: KB Plank Pull-Through":   "https://www.youtube.com/watch?v=B9OBbvfyDDo",
+  "Single-Arm KB Swing":               "https://www.youtube.com/watch?v=0_XjJjLc7NE",
+  "KB High Pull":                      "https://www.youtube.com/watch?v=7C9PNqBmFqQ",
+  "KB Alternating Deadlift":           "https://www.youtube.com/watch?v=op9kVnSso6Q",
+  "KB Windmill":                       "https://www.youtube.com/watch?v=Hewnodf3H6M",
+  "Suitcase Carry":                    "https://www.youtube.com/watch?v=1ZMC5G8LrWM",
+  "KB Halo":                           "https://www.youtube.com/watch?v=A-YGBpqN0oQ",
+  "KB Romanian Deadlift":              "https://www.youtube.com/watch?v=2SHsk9AzdjA",
+  "KB Clean":                          "https://www.youtube.com/watch?v=re5VhCQPQdk",
+  "Single-Arm KB Row":                 "https://www.youtube.com/watch?v=FWRDWF-n_yQ",
+  "KB Sumo Deadlift":                  "https://www.youtube.com/watch?v=ZsAqLBLnGiM",
+  "KB Swing":                          "https://www.youtube.com/watch?v=sSNbzXGsFMo",
+  "KB Goblet Reverse Lunge":           "https://www.youtube.com/watch?v=nq7hBd-OGg8",
+  "Double KB Floor Press":             "https://www.youtube.com/watch?v=LMNv3cSc5-M",
+  "KB Z-Press":                        "https://www.youtube.com/watch?v=c3Lf_NnI4Vk",
+  "KB Clean + Press":                  "https://www.youtube.com/watch?v=re5VhCQPQdk",
+  "KB Front Squat":                    "https://www.youtube.com/watch?v=H1HuYzrNdHk",
+  "KB Goblet Lateral Lunge":           "https://www.youtube.com/watch?v=GvIHl7BXVUA",
+};
+
+const tagColors = {
+  "STRENGTH + POWER":       "#e8550a",
+  "CONDITIONING + CORE":    "#0077b6",
+  "PULL-DOMINANT + HINGE":  "#7b2d8b",
+  "PUSH + TOTAL BODY BURN": "#1b7a2e",
+};
+
+const weeks = {
+  A: {
+    sessions: [
+      {
+        id: "A1", tag: "STRENGTH + POWER",
+        blocks: [
+          { title: "Power Block — 15 min", sets: [
+            { move: "Double KB Swing",       sets: "5×10",     load: "2×40 lb", note: "Hip hinge drive — not a squat" },
+            { move: "KB Push Press",          sets: "4×5/side", load: "40 lb",   note: "Leg drive to lock overhead" },
+          ]},
+          { title: "Strength Superset — 20 min", sets: [
+            { move: "Double Front Squat",    sets: "4×6",      load: "2×40 lb", note: "Elbows high, brace hard" },
+            { move: "Renegade Row",          sets: "4×5/side", load: "2×40 lb", note: "Anti-rotation core demand" },
+          ]},
+          { title: "Finisher — 8 min EMOM", sets: [
+            { move: "Odd min: KB Goblet Squat",        sets: "8 reps",  load: "40 lb", note: "" },
+            { move: "Even min: KB Plank Pull-Through",  sets: "8/side",  load: "40 lb", note: "" },
+          ]},
+        ],
+      },
+      {
+        id: "A2", tag: "CONDITIONING + CORE",
+        blocks: [
+          { title: "Ballistic Circuit — 20 min (4 rounds)", sets: [
+            { move: "Single-Arm KB Swing",   sets: "12/side",  load: "40 lb", note: "Switch hands each set" },
+            { move: "KB High Pull",          sets: "8/side",   load: "40 lb", note: "Elbow leads, not the hand" },
+            { move: "KB Alternating Deadlift", sets: "10/side",load: "40 lb", note: "Hip hinge, neutral spine" },
+          ]},
+          { title: "Core Triplet — 12 min (3 rounds)", sets: [
+            { move: "KB Windmill",           sets: "5/side",       load: "40 lb", note: "Slow & controlled" },
+            { move: "Suitcase Carry",        sets: "40 yards/side",load: "40 lb", note: "Tall posture, anti-lean" },
+            { move: "KB Halo",               sets: "8/direction",  load: "40 lb", note: "Shoulder mobility + stability" },
+          ]},
+        ],
+      },
+    ],
+  },
+  B: {
+    sessions: [
+      {
+        id: "B1", tag: "PULL-DOMINANT + HINGE",
+        blocks: [
+          { title: "Hinge Power Block — 15 min", sets: [
+            { move: "KB Romanian Deadlift",  sets: "4×8",      load: "2×40 lb", note: "Hamstring tension at bottom" },
+            { move: "KB Clean",              sets: "5×4/side", load: "40 lb",   note: "Vertical path, elbow punch-through" },
+          ]},
+          { title: "Pull Superset — 20 min", sets: [
+            { move: "Single-Arm KB Row",     sets: "4×8/side", load: "40 lb",   note: "Brace ipsilateral leg on bench" },
+            { move: "KB Sumo Deadlift",      sets: "4×6",      load: "2×40 lb", note: "Wide stance, knees track toes" },
+          ]},
+          { title: "Finisher — 6-min AMRAP", sets: [
+            { move: "KB Swing",              sets: "10 reps",  load: "40 lb", note: "" },
+            { move: "KB Goblet Reverse Lunge", sets: "5/side",load: "40 lb", note: "" },
+          ]},
+        ],
+      },
+      {
+        id: "B2", tag: "PUSH + TOTAL BODY BURN",
+        blocks: [
+          { title: "Press Block — 15 min", sets: [
+            { move: "Double KB Floor Press", sets: "4×8",      load: "2×40 lb", note: "Neutral grip, full scapular engagement" },
+            { move: "KB Z-Press",            sets: "3×6/side", load: "40 lb",   note: "Seated on floor — demands overhead mobility" },
+          ]},
+          { title: "Complex Finisher — 3 rounds, rest 90 s", sets: [
+            { move: "KB Clean + Press",      sets: "4/side",   load: "40 lb",   note: "No rest within complex" },
+            { move: "KB Front Squat",        sets: "4 reps",   load: "2×40 lb", note: "Back-to-back with press" },
+            { move: "KB Swing",              sets: "10 reps",  load: "40 lb",   note: "Power reset each rep" },
+            { move: "KB Goblet Lateral Lunge", sets: "5/side",load: "40 lb",   note: "Adductor stretch at bottom" },
+          ]},
+        ],
+      },
+    ],
+  },
+};
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let activeWeek = 'A';
+let activeSession = 'A1';
+let expandedBlock = null;
+let workoutLog = JSON.parse(localStorage.getItem('kbLog') || '[]');
+
+// ══════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  if (id === 'log') renderLog();
+  if (id === 'progress') renderProgress();
+}
+
+// ══════════════════════════════════════════
+// WORKOUT RENDER
+// ══════════════════════════════════════════
+function switchWeek(w) {
+  activeWeek = w;
+  activeSession = w + '1';
+  expandedBlock = null;
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('week-' + w).classList.add('active');
+  renderSessions();
+  renderBlocks();
+}
+
+function switchSession(sid) {
+  activeSession = sid;
+  expandedBlock = null;
+  renderSessions();
+  renderBlocks();
+}
+
+function toggleBlock(idx) {
+  expandedBlock = expandedBlock === idx ? null : idx;
+  renderBlocks();
+}
+
+function renderSessions() {
+  const sessions = weeks[activeWeek].sessions;
+  const container = document.getElementById('session-tabs');
+  container.innerHTML = sessions.map(s => {
+    const color = tagColors[s.tag];
+    const isActive = s.id === activeSession;
+    return `<button class="session-btn ${isActive ? 'active' : ''}"
+      onclick="switchSession('${s.id}')"
+      style="border-color: ${isActive ? color : 'var(--border)'}">
+      <div class="sid" style="color:${color}">${s.id}</div>
+      <div class="stag">${s.tag}</div>
+    </button>`;
+  }).join('');
+}
+
+function renderBlocks() {
+  const session = weeks[activeWeek].sessions.find(s => s.id === activeSession);
+  const color = tagColors[session.tag];
+  const container = document.getElementById('blocks-container');
+  container.innerHTML = session.blocks.map((block, bi) => {
+    const isOpen = expandedBlock === bi;
+    const exRows = block.sets.map(ex => {
+      const url = videos[ex.move];
+      const watchBtn = url ? `<a class="watch-btn" href="${url}" target="_blank" rel="noopener"
+        style="color:${color};border-color:${color}55;background:${color}18">▶ WATCH</a>` : '';
+      return `<div class="ex-row">
+        <div>
+          <div class="ex-name">${ex.move}</div>
+          ${ex.note ? `<div class="ex-note">${ex.note}</div>` : ''}
+          <div class="ex-actions">
+            ${watchBtn}
+            <button class="timer-btn" onclick="openTimer('${ex.move.replace(/'/g,"\\'")}')">⏱ REST</button>
+          </div>
+        </div>
+        <div class="ex-right">
+          <div class="ex-sets" style="color:${color}">${ex.sets}</div>
+          <div class="ex-load">${ex.load}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="block-wrap">
+      <button class="block-header ${isOpen ? 'open' : ''}"
+        onclick="toggleBlock(${bi})"
+        style="border-color:${isOpen ? color : 'var(--border)'}">
+        <div>
+          <div class="block-num" style="color:${color}">Block ${bi + 1}</div>
+          <div class="block-title">${block.title}</div>
+        </div>
+        <div class="block-chevron" style="background:${isOpen ? color : 'var(--bg3)'}">
+          ${isOpen ? '−' : '+'}
+        </div>
+      </button>
+      ${isOpen ? `<div class="block-body" style="border-color:${color}">${exRows}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// REST TIMER
+// ══════════════════════════════════════════
+let timerDuration = 60;
+let timerRemaining = 60;
+let timerRunning = false;
+let timerInterval = null;
+const CIRCUMFERENCE = 628;
+
+function setPreset(sec, btn) {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  timerDuration = sec;
+  timerRemaining = sec;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('timer-toggle-btn').textContent = 'Start';
+  updateTimerDisplay();
+}
+
+function openTimer(exerciseName) {
+  document.getElementById('timer-exercise-name').textContent = exerciseName;
+  timerRemaining = timerDuration;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('timer-toggle-btn').textContent = 'Start';
+  updateTimerDisplay();
+  document.getElementById('timer-overlay').classList.add('visible');
+}
+
+function closeTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  document.getElementById('timer-overlay').classList.remove('visible');
+}
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-toggle-btn').textContent = 'Resume';
+  } else {
+    timerRunning = true;
+    document.getElementById('timer-toggle-btn').textContent = 'Pause';
+    timerInterval = setInterval(() => {
+      timerRemaining--;
+      updateTimerDisplay();
+      if (timerRemaining <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        document.getElementById('timer-toggle-btn').textContent = 'Start';
+        // vibrate if supported
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        timerRemaining = timerDuration;
+        setTimeout(updateTimerDisplay, 300);
+      }
+    }, 1000);
+  }
+}
+
+function updateTimerDisplay() {
+  const pct = timerRemaining / timerDuration;
+  const offset = CIRCUMFERENCE * (1 - pct);
+  const prog = document.getElementById('timer-progress');
+  prog.style.strokeDashoffset = offset;
+  prog.classList.toggle('urgent', timerRemaining <= 10);
+  document.getElementById('timer-number').textContent =
+    timerRemaining >= 60
+      ? Math.floor(timerRemaining/60) + ':' + String(timerRemaining%60).padStart(2,'0')
+      : timerRemaining;
+}
+
+// ══════════════════════════════════════════
+// WORKOUT LOG
+// ══════════════════════════════════════════
+function logWorkout() {
+  const session = weeks[activeWeek].sessions.find(s => s.id === activeSession);
+  const entry = {
+    date: new Date().toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' }),
+    session: activeSession,
+    tag: session.tag,
+    week: activeWeek,
+  };
+  workoutLog.unshift(entry);
+  localStorage.setItem('kbLog', JSON.stringify(workoutLog));
+  renderLog();
+  showPage('log');
+}
+
+function renderLog() {
+  const container = document.getElementById('log-list');
+  if (!workoutLog.length) {
+    container.innerHTML = `<div class="log-empty">
+      <span class="big">🏋️</span>
+      No workouts logged yet.<br>Complete a session and tap<br>"Log Today's Session" to track it.
+    </div>`;
+    return;
+  }
+  container.innerHTML = workoutLog.map((e, i) => `
+    <div class="log-entry">
+      <div class="log-entry-date">${e.date}</div>
+      <div class="log-entry-session">Week ${e.week} · Session ${e.session}</div>
+      <div class="log-entry-detail">${e.tag}</div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════
+// PROGRESS
+// ══════════════════════════════════════════
+function renderProgress() {
+  const total = workoutLog.length;
+  const target = 48; // ~12 weeks × 4
+  const pct = Math.min(100, Math.round((total / target) * 100));
+  const weeks_done = Math.floor(total / 4);
+
+  const container = document.getElementById('progress-content');
+  container.innerHTML = `
+    <div class="prog-card">
+      <div class="prog-card-label">Overall Progress</div>
+      <div class="prog-stat-row">
+        <div class="prog-stat">
+          <div class="ps-label">Sessions</div>
+          <div class="ps-val">${total}</div>
+          <div class="ps-unit">logged</div>
+        </div>
+        <div class="prog-stat">
+          <div class="ps-label">Weeks</div>
+          <div class="ps-val">${weeks_done}</div>
+          <div class="ps-unit">complete</div>
+        </div>
+        <div class="prog-stat">
+          <div class="ps-label">Program</div>
+          <div class="ps-val">${pct}%</div>
+          <div class="ps-unit">of 12 wks</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap">
+        <div class="prog-bar-label"><span>Program Completion</span><span>${pct}%</span></div>
+        <div class="prog-bar-track"><div class="prog-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>
+
+    <div class="prog-card" style="margin-top:10px;">
+      <div class="prog-card-label">Current Phase</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6;">
+        ${total === 0 ? '🔴 Not started yet — go get your first session in!' :
+          total < 12  ? `🟡 <strong>Phase 1 — Weeks 1–3:</strong> Technique & baseline. Focus on form, rest fully.` :
+          total < 24  ? `🟠 <strong>Phase 2 — Weeks 4–6:</strong> Volume load. Add 1 set per lift, shorten rest by 10 s.` :
+          total < 36  ? `🟢 <strong>Phase 3 — Weeks 7–9:</strong> Intensity. Time to upgrade swings & deadlifts to 53–62 lb.` :
+                        `🔵 <strong>Deload / Repeat:</strong> Flush fatigue, then reload with heavier bells across the board.`}
+      </div>
+    </div>
+
+    <div class="prog-card" style="margin-top:10px;">
+      <div class="prog-card-label">Session Breakdown</div>
+      ${['A1','A2','B1','B2'].map(sid => {
+        const count = workoutLog.filter(e => e.session === sid).length;
+        const max = Math.max(...['A1','A2','B1','B2'].map(s => workoutLog.filter(e=>e.session===s).length), 1);
+        const p = Math.round((count/max)*100);
+        return `<div class="prog-bar-wrap" style="margin-bottom:10px;">
+          <div class="prog-bar-label"><span>${sid}</span><span>${count} sessions</span></div>
+          <div class="prog-bar-track"><div class="prog-bar-fill" style="width:${p}%"></div></div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+renderSessions();
+renderBlocks();
+renderLog();
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
