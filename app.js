@@ -782,14 +782,18 @@ function logWorkout() {
       <div class="log-ex-card">
         <div class="log-ex-card-name">${ex.move}</div>
         <div class="log-ex-card-prog">Programmed: ${dispSets} · ${dispLoad}</div>
-        <div class="log-fields">
+        <div class="log-fields" style="grid-template-columns:1fr 1fr 1fr;">
           <div class="log-field">
-            <label>Weight Used (lb)</label>
-            <input type="number" inputmode="decimal" id="log-weight-${i}" placeholder="${dispLoad.replace(/[^0-9]/g,'') || '40'}" />
+            <label>Sets Done</label>
+            <input type="number" inputmode="numeric" id="log-sets-${i}" placeholder="${dispSets.match(/^(\d+)/)?.[1] || '3'}" />
           </div>
           <div class="log-field">
-            <label>Reps Completed</label>
+            <label>Reps/Set</label>
             <input type="number" inputmode="numeric" id="log-reps-${i}" placeholder="${dispSets.match(/\d+$/)?.[0] || '8'}" />
+          </div>
+          <div class="log-field">
+            <label>Weight (lb)</label>
+            <input type="number" inputmode="decimal" id="log-weight-${i}" placeholder="${dispLoad.replace(/[^0-9]/g,'') || '40'}" />
           </div>
         </div>
         <div class="diff-row">
@@ -838,13 +842,15 @@ function submitLog() {
   // Collect logged data per exercise
   const exerciseData = allExercises.map((ex, i) => {
     const weightEl = document.getElementById(`log-weight-${i}`);
-    const repsEl = document.getElementById(`log-reps-${i}`);
+    const repsEl  = document.getElementById(`log-reps-${i}`);
+    const setsEl  = document.getElementById(`log-sets-${i}`);
     return {
       move: ex.move,
       programmedSets: ex.sets,
       programmedLoad: ex.load,
-      weightUsed: weightEl ? weightEl.value : '',
-      repsCompleted: repsEl ? repsEl.value : '',
+      setsCompleted:  setsEl  ? setsEl.value  : '',
+      repsCompleted:  repsEl  ? repsEl.value  : '',
+      weightUsed:     weightEl ? weightEl.value : '',
       difficulty: exDiffs[i] || 'right',
     };
   });
@@ -1048,12 +1054,17 @@ function renderLog() {
   c.innerHTML = workoutLog.map((e, idx) => {
     const diffColors = { easy:'diff-easy', right:'diff-right', hard:'diff-hard' };
     const diffLabels = { easy:'Easy', right:'Just Right', hard:'Hard' };
-    const exList = e.exercises ? e.exercises.map(ex => `
+    const exList = e.exercises ? e.exercises.map(ex => {
+      const sets   = ex.setsCompleted  ? `${ex.setsCompleted}×` : '';
+      const reps   = ex.repsCompleted  ? ex.repsCompleted        : '';
+      const weight = ex.weightUsed     ? ` @ ${ex.weightUsed} lb` : '';
+      const volume = (sets || reps) ? ` — ${sets}${reps}${weight}` : (weight ? ` —${weight}` : '');
+      return `
       <div class="log-entry-ex">
-        <span>${ex.move}${ex.weightUsed ? ` — ${ex.weightUsed} lb` : ''}${ex.repsCompleted ? ` × ${ex.repsCompleted}` : ''}</span>
+        <span>${ex.move}${volume}</span>
         <span class="log-entry-ex-diff ${diffColors[ex.difficulty] || ''}">${diffLabels[ex.difficulty] || ''}</span>
-      </div>
-    `).join('') : '';
+      </div>`;
+    }).join('') : '';
 
     return `
     <div class="log-entry" id="log-entry-${idx}">
