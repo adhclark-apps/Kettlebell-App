@@ -64,47 +64,47 @@ const tagColors = {
 const allPhases = [
   {
     id:1, label:"Phase 1", weeks:"Wks 1–3",
-    title:"Foundation", load:"2×40 lb",
-    focus:"Establish movement patterns. Rest fully. Every rep is a technique rep.",
+    title:"Foundation — Entry Ramp", load:"1×40 lb (single bell throughout)",
+    focus:"Single bell only. 3 sets on all main lifts. Master movement patterns before adding load or a second bell. Finish every session feeling strong, not buried.",
     sessions:[
       { id:"D1", tag:"STRENGTH + POWER", blocks:[
-        { title:"Power Block — 15 min", sets:[
-          {move:"Double KB Swing",    sets:"5×10",     load:"2×40 lb", note:"Hip hinge — drive with glutes, not back"},
-          {move:"KB Push Press",      sets:"4×5/side", load:"40 lb",   note:"Leg drive initiates — arm locks out overhead"},
+        { title:"Power Block — 12 min", sets:[
+          {move:"KB Swing",        sets:"3×10",     load:"40 lb", note:"Hip hinge — drive with glutes, not back. Own this before going double."},
+          {move:"KB Push Press",   sets:"3×5/side", load:"40 lb", note:"Leg drive initiates — arm locks out fully overhead"},
         ]},
-        { title:"Strength Superset — 20 min", sets:[
-          {move:"Double Front Squat", sets:"4×6",      load:"2×40 lb", note:"Elbows high — brace hard before descent"},
-          {move:"Renegade Row",       sets:"4×5/side", load:"2×40 lb", note:"Zero hip rotation — core must win"},
+        { title:"Strength Superset — 15 min", sets:[
+          {move:"KB Goblet Squat", sets:"3×8",      load:"40 lb", note:"Single bell goblet — elbows in, brace hard, sit deep"},
+          {move:"Renegade Row",    sets:"3×4/side", load:"40 lb", note:"One bell only — zero hip rotation, core must win"},
         ]},
-        { title:"Finisher — 8 min EMOM", sets:[
-          {move:"KB Goblet Squat",       sets:"8 reps", load:"40 lb", note:"Odd minutes — sit deep"},
-          {move:"KB Plank Pull-Through", sets:"8/side", load:"40 lb", note:"Even minutes — hips stay square"},
+        { title:"Finisher — 6 min EMOM", sets:[
+          {move:"KB Goblet Squat",       sets:"6 reps", load:"40 lb", note:"Odd minutes — quality over speed"},
+          {move:"KB Plank Pull-Through", sets:"6/side", load:"40 lb", note:"Even minutes — hips stay perfectly square"},
         ]},
       ]},
       { id:"D2", tag:"CONDITIONING + CORE", blocks:[
-        { title:"Ballistic Circuit — 20 min (4 rounds)", sets:[
-          {move:"Single-Arm KB Swing",    sets:"12/side",    load:"40 lb", note:"Switch hands each set — crisp hip snap"},
-          {move:"KB High Pull",           sets:"8/side",     load:"40 lb", note:"Elbow leads — not the wrist"},
-          {move:"KB Alternating Deadlift",sets:"10/side",    load:"40 lb", note:"Full hinge — neutral spine throughout"},
+        { title:"Ballistic Circuit — 15 min (3 rounds)", sets:[
+          {move:"Single-Arm KB Swing",    sets:"10/side", load:"40 lb", note:"Switch hands each set — crisp hip snap every rep"},
+          {move:"KB High Pull",           sets:"6/side",  load:"40 lb", note:"Elbow leads — not the wrist"},
+          {move:"KB Alternating Deadlift",sets:"8/side",  load:"40 lb", note:"Full hinge — neutral spine throughout"},
         ]},
-        { title:"Core Triplet — 12 min (3 rounds)", sets:[
-          {move:"KB Windmill",    sets:"5/side",        load:"40 lb", note:"3s lowering — slow and deliberate"},
-          {move:"Suitcase Carry", sets:"40 yards/side", load:"40 lb", note:"Tall posture — never lean into the bell"},
-          {move:"KB Halo",        sets:"8/direction",   load:"40 lb", note:"Controlled arc — shoulder mobility focus"},
+        { title:"Core Triplet — 10 min (3 rounds)", sets:[
+          {move:"KB Windmill",    sets:"4/side",        load:"40 lb", note:"3s lowering — slow and deliberate, feel the stretch"},
+          {move:"Suitcase Carry", sets:"30 yards/side", load:"40 lb", note:"Tall posture — never lean into the bell"},
+          {move:"KB Halo",        sets:"6/direction",   load:"40 lb", note:"Controlled arc — full shoulder mobility"},
         ]},
       ]},
       { id:"D3", tag:"PULL + BURN", blocks:[
-        { title:"Hinge + Pull Block — 20 min", sets:[
-          {move:"KB Romanian Deadlift", sets:"4×8",      load:"2×40 lb", note:"Hamstring tension at bottom — don't round"},
-          {move:"KB Clean",             sets:"5×4/side", load:"40 lb",   note:"Vertical path — punch elbow through rack"},
-          {move:"Single-Arm KB Row",    sets:"4×8/side", load:"40 lb",   note:"Full scapular retraction at top"},
-          {move:"KB Sumo Deadlift",     sets:"4×6",      load:"2×40 lb", note:"Wide stance — drive knees out hard"},
+        { title:"Hinge + Pull Block — 18 min", sets:[
+          {move:"KB Romanian Deadlift", sets:"3×8",      load:"40 lb", note:"Single bell — hamstring tension at bottom, don't round"},
+          {move:"KB Clean",             sets:"3×4/side", load:"40 lb", note:"Vertical path — punch elbow through the rack"},
+          {move:"Single-Arm KB Row",    sets:"3×8/side", load:"40 lb", note:"Full scapular retraction at the top"},
+          {move:"KB Sumo Deadlift",     sets:"3×6",      load:"40 lb", note:"Single bell between legs — drive knees out hard"},
         ]},
-        { title:"Complex Finisher — 3 rounds (rest 90s)", sets:[
-          {move:"KB Clean + Press",       sets:"4/side",  load:"40 lb",   note:"No pause between clean and press"},
-          {move:"KB Front Squat",         sets:"4 reps",  load:"2×40 lb", note:"Rack tight — elbows stay up"},
-          {move:"KB Swing",               sets:"10 reps", load:"40 lb",   note:"Power reset every single rep"},
-          {move:"KB Goblet Lateral Lunge",sets:"5/side",  load:"40 lb",   note:"Adductor stretch at bottom"},
+        { title:"Complex Finisher — 2 rounds (rest 90s)", sets:[
+          {move:"KB Clean + Press",       sets:"3/side",  load:"40 lb", note:"No pause between clean and press — fluid"},
+          {move:"KB Front Squat",         sets:"4 reps",  load:"40 lb", note:"Single bell rack — elbows stay up"},
+          {move:"KB Swing",               sets:"8 reps",  load:"40 lb", note:"Power reset every rep"},
+          {move:"KB Goblet Lateral Lunge",sets:"4/side",  load:"40 lb", note:"Adductor stretch at the bottom"},
         ]},
       ]},
     ],
@@ -349,30 +349,30 @@ const allPhases = [
 // ════════════════════════════════════════
 const planPhases = [
   {
-    weeks:"Wks 1–3", title:"Phase 1 — Foundation",
-    focus:"3 days/week. 2×40 lb throughout. Master every pattern before adding load or complexity.",
+    weeks:"Wks 1–3", title:"Phase 1 — Foundation (Entry Ramp)",
+    focus:"Single bell only. 3 sets on all main lifts. Finish every session feeling strong. Double bell and added sets begin in Phase 2.",
     sessions:[
       {label:"Day 1 — Strength + Power", exercises:[
-        {name:"Double KB Swing",    detail:"5×10 · 2×40",   badge:""},
-        {name:"KB Push Press",      detail:"4×5/side · 40", badge:""},
-        {name:"Double Front Squat", detail:"4×6 · 2×40",    badge:""},
-        {name:"Renegade Row",       detail:"4×5/side · 2×40",badge:""},
-        {name:"EMOM Finisher",      detail:"8 min",          badge:"", note:"Goblet Squat / Plank Pull-Through alternating"},
+        {name:"KB Swing",          detail:"3×10 · 40 lb",   badge:"", note:"Single bell — own the hip hinge before going double"},
+        {name:"KB Push Press",     detail:"3×5/side · 40",  badge:""},
+        {name:"KB Goblet Squat",   detail:"3×8 · 40 lb",    badge:"", note:"Single bell squat — replaces double front squat"},
+        {name:"Renegade Row",      detail:"3×4/side · 40",  badge:"", note:"Single bell only"},
+        {name:"EMOM Finisher",     detail:"6 min",          badge:"", note:"Goblet Squat / Plank Pull-Through — 6 reps each"},
       ]},
       {label:"Day 2 — Conditioning + Core", exercises:[
-        {name:"Single-Arm Swing",   detail:"4×12/side · 40", badge:""},
-        {name:"KB High Pull",       detail:"4×8/side · 40",  badge:""},
-        {name:"KB Alt Deadlift",    detail:"4×10/side · 40", badge:""},
-        {name:"KB Windmill",        detail:"3×5/side · 40",  badge:""},
-        {name:"Suitcase Carry",     detail:"3×40 yds · 40",  badge:""},
-        {name:"KB Halo",            detail:"3×8/dir · 40",   badge:""},
+        {name:"Single-Arm Swing",  detail:"3×10/side · 40", badge:""},
+        {name:"KB High Pull",      detail:"3×6/side · 40",  badge:""},
+        {name:"KB Alt Deadlift",   detail:"3×8/side · 40",  badge:""},
+        {name:"KB Windmill",       detail:"3×4/side · 40",  badge:""},
+        {name:"Suitcase Carry",    detail:"3×30 yds · 40",  badge:""},
+        {name:"KB Halo",           detail:"3×6/dir · 40",   badge:""},
       ]},
       {label:"Day 3 — Pull + Burn", exercises:[
-        {name:"KB Romanian DL",     detail:"4×8 · 2×40",    badge:""},
-        {name:"KB Clean",           detail:"5×4/side · 40", badge:""},
-        {name:"Single-Arm KB Row",  detail:"4×8/side · 40", badge:""},
-        {name:"KB Sumo Deadlift",   detail:"4×6 · 2×40",   badge:""},
-        {name:"Complex Finisher",   detail:"3 rounds · 90s rest", badge:"", note:"Clean+Press / Front Squat / Swing / Lateral Lunge"},
+        {name:"KB Romanian DL",    detail:"3×8 · 40 lb",    badge:"", note:"Single bell — feel the hamstring stretch"},
+        {name:"KB Clean",          detail:"3×4/side · 40",  badge:""},
+        {name:"Single-Arm KB Row", detail:"3×8/side · 40",  badge:""},
+        {name:"KB Sumo Deadlift",  detail:"3×6 · 40 lb",    badge:"", note:"Single bell between legs"},
+        {name:"Complex Finisher",  detail:"2 rounds · 90s", badge:"", note:"Clean+Press / Front Squat / Swing / Lateral Lunge"},
       ]},
     ],
   },
@@ -728,37 +728,352 @@ function updateTimerDisplay() {
 }
 
 // ════════════════════════════════════════
-// LOG
+// SMART LOGGING SYSTEM
 // ════════════════════════════════════════
+
+// exerciseOverrides: stores accepted suggestion adjustments per exercise key
+// key format: "phaseIdx-sessionId-moveName"
+let exerciseOverrides = JSON.parse(localStorage.getItem('kbOverrides') || '{}');
+
+function saveOverrides() {
+  localStorage.setItem('kbOverrides', JSON.stringify(exerciseOverrides));
+}
+
+// Get override key for an exercise
+function overrideKey(phaseIdx, sessionId, moveName) {
+  return `${phaseIdx}-${sessionId}-${moveName}`;
+}
+
+// Get effective sets/load for an exercise (with overrides applied)
+function getEffective(phaseIdx, sessionId, move, field) {
+  const key = overrideKey(phaseIdx, sessionId, move, field);
+  return exerciseOverrides[key] ? exerciseOverrides[key][field] : null;
+}
+
+// Open the logging overlay for current session
 function logWorkout() {
   const phase = allPhases[activePhaseIdx];
   const session = phase.sessions.find(s => s.id === activeSession);
+  const overlay = document.getElementById('log-overlay');
+  const inner = document.getElementById('log-overlay-inner');
+
+  // Collect all exercises across all blocks
+  const allExercises = session.blocks.flatMap(b => b.sets);
+
+  inner.innerHTML = `
+    <div class="log-overlay-title">LOG <span>SESSION</span></div>
+    <div class="log-overlay-sub">${phase.label} · ${{D1:'Day 1',D2:'Day 2',D3:'Day 3'}[activeSession]} · ${new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</div>
+
+    <div class="log-session-diff">
+      <div class="log-session-diff-label">Overall Session Difficulty</div>
+      <div class="diff-row">
+        <button class="diff-btn easy" onclick="selectSessionDiff('easy',this)">😤 Easy</button>
+        <button class="diff-btn right" onclick="selectSessionDiff('right',this)">✅ Just Right</button>
+        <button class="diff-btn hard" onclick="selectSessionDiff('hard',this)">🔥 Hard</button>
+      </div>
+    </div>
+
+    ${allExercises.map((ex, i) => {
+      const oKey = overrideKey(activePhaseIdx, activeSession, ex.move);
+      const ov = exerciseOverrides[oKey];
+      const dispSets = ov ? ov.sets : ex.sets;
+      const dispLoad = ov ? ov.load : ex.load;
+      return `
+      <div class="log-ex-card">
+        <div class="log-ex-card-name">${ex.move}</div>
+        <div class="log-ex-card-prog">Programmed: ${dispSets} · ${dispLoad}</div>
+        <div class="log-fields">
+          <div class="log-field">
+            <label>Weight Used (lb)</label>
+            <input type="number" inputmode="decimal" id="log-weight-${i}" placeholder="${dispLoad.replace(/[^0-9]/g,'') || '40'}" />
+          </div>
+          <div class="log-field">
+            <label>Reps Completed</label>
+            <input type="number" inputmode="numeric" id="log-reps-${i}" placeholder="${dispSets.match(/\d+$/)?.[0] || '8'}" />
+          </div>
+        </div>
+        <div class="diff-row">
+          <button class="diff-btn easy" onclick="selectDiff(${i},'easy',this)">😤 Easy</button>
+          <button class="diff-btn right" onclick="selectDiff(${i},'right',this)">✅ Just Right</button>
+          <button class="diff-btn hard" onclick="selectDiff(${i},'hard',this)">🔥 Hard</button>
+        </div>
+      </div>`;
+    }).join('')}
+
+    <button class="log-submit-btn" onclick="submitLog()">SAVE SESSION</button>
+    <button class="log-cancel-btn" onclick="closeLogOverlay()">Cancel</button>
+  `;
+
+  overlay.classList.add('visible');
+  overlay.scrollTop = 0;
+}
+
+let sessionDiff = null;
+const exDiffs = {};
+
+function selectSessionDiff(val, btn) {
+  sessionDiff = val;
+  btn.parentElement.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function selectDiff(idx, val, btn) {
+  exDiffs[idx] = val;
+  btn.parentElement.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function closeLogOverlay() {
+  document.getElementById('log-overlay').classList.remove('visible');
+  sessionDiff = null;
+  Object.keys(exDiffs).forEach(k => delete exDiffs[k]);
+}
+
+function submitLog() {
+  const phase = allPhases[activePhaseIdx];
+  const session = phase.sessions.find(s => s.id === activeSession);
+  const allExercises = session.blocks.flatMap(b => b.sets);
   const dayLabels = { D1:'Day 1', D2:'Day 2', D3:'Day 3' };
+
+  // Collect logged data per exercise
+  const exerciseData = allExercises.map((ex, i) => {
+    const weightEl = document.getElementById(`log-weight-${i}`);
+    const repsEl = document.getElementById(`log-reps-${i}`);
+    return {
+      move: ex.move,
+      programmedSets: ex.sets,
+      programmedLoad: ex.load,
+      weightUsed: weightEl ? weightEl.value : '',
+      repsCompleted: repsEl ? repsEl.value : '',
+      difficulty: exDiffs[i] || 'right',
+    };
+  });
+
   const entry = {
+    id: Date.now(),
     date: new Date().toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'}),
     session: dayLabels[activeSession],
+    sessionId: activeSession,
+    phaseIdx: activePhaseIdx,
     tag: session.tag,
     phase: phase.label,
+    sessionDiff: sessionDiff || 'right',
+    exercises: exerciseData,
   };
+
   workoutLog.unshift(entry);
   localStorage.setItem('kbLog', JSON.stringify(workoutLog));
+  closeLogOverlay();
+
+  // Generate suggestions
+  const suggestions = generateSuggestions(entry, allExercises);
+  if (suggestions.length) {
+    showSuggestions(suggestions, entry);
+  } else {
+    renderLog();
+    showPage('log');
+  }
+}
+
+// ── SUGGESTION ENGINE ──
+function generateSuggestions(entry, allExercises) {
+  const suggestions = [];
+
+  // Session-wide suggestion
+  if (entry.sessionDiff === 'easy') {
+    suggestions.push({
+      type: 'session',
+      title: 'Session felt Easy',
+      text: 'You crushed this one. Consider adding 1 set to all main lifts next session, or bump weight by 5 lb across the board.',
+      action: 'add-set-all',
+      entry,
+      allExercises,
+    });
+  } else if (entry.sessionDiff === 'hard') {
+    suggestions.push({
+      type: 'session',
+      title: 'Session felt Hard',
+      text: 'That\'s okay — it means you\'re working. Remove 1 set from all main lifts next session and keep the same weight until it feels Right.',
+      action: 'remove-set-all',
+      entry,
+      allExercises,
+    });
+  }
+
+  // Per-exercise suggestions
+  entry.exercises.forEach((ex, i) => {
+    const progEx = allExercises[i];
+    const weight = parseFloat(ex.weightUsed);
+    const reps = parseFloat(ex.repsCompleted);
+    const progReps = parseFloat(ex.programmedSets.match(/\d+$/)?.[0] || 0);
+    const progWeight = parseFloat(ex.programmedLoad.replace(/[^0-9.]/g,'') || 0);
+
+    if (ex.difficulty === 'easy' && reps >= progReps) {
+      suggestions.push({
+        type: 'exercise',
+        move: ex.move,
+        title: ex.move,
+        text: `Rated Easy and hit all reps at ${weight || progWeight} lb. Ready to add 5 lb next session?`,
+        action: 'add-weight',
+        phaseIdx: entry.phaseIdx,
+        sessionId: entry.sessionId,
+        progEx,
+        newWeight: (weight || progWeight) + 5,
+      });
+    } else if (ex.difficulty === 'hard' && reps < progReps - 1) {
+      suggestions.push({
+        type: 'exercise',
+        move: ex.move,
+        title: ex.move,
+        text: `Rated Hard and missed ${progReps - reps} reps. Drop weight by 5 lb next session and rebuild from there.`,
+        action: 'drop-weight',
+        phaseIdx: entry.phaseIdx,
+        sessionId: entry.sessionId,
+        progEx,
+        newWeight: Math.max(15, (weight || progWeight) - 5),
+      });
+    } else if (ex.difficulty === 'easy' && reps > progReps) {
+      suggestions.push({
+        type: 'exercise',
+        move: ex.move,
+        title: ex.move,
+        text: `Rated Easy and exceeded reps (${reps} vs ${progReps} programmed). Add 1 rep per set next session.`,
+        action: 'add-reps',
+        phaseIdx: entry.phaseIdx,
+        sessionId: entry.sessionId,
+        progEx,
+      });
+    }
+  });
+
+  return suggestions;
+}
+
+function showSuggestions(suggestions, entry) {
+  const overlay = document.getElementById('sugg-overlay');
+  const inner = document.getElementById('sugg-overlay-inner');
+
+  inner.innerHTML = `
+    <div class="sugg-title">NEXT SESSION <span>TIPS</span></div>
+    <div class="sugg-sub">${suggestions.length} suggestion${suggestions.length > 1 ? 's' : ''} based on your log — tap to accept or dismiss</div>
+    ${suggestions.map((s, i) => `
+      <div class="sugg-card ${s.type === 'session' ? 'session-wide' : ''}" id="sugg-card-${i}">
+        <div class="sugg-card-label ${s.type === 'session' ? 'session-wide' : ''}">${s.type === 'session' ? '⚡ SESSION-WIDE' : '💪 EXERCISE'}</div>
+        <div class="sugg-card-name">${s.title}</div>
+        <div class="sugg-card-text">${s.text}</div>
+        <div class="sugg-actions">
+          <button class="sugg-accept" onclick="acceptSuggestion(${i})">✓ Accept</button>
+          <button class="sugg-dismiss" onclick="dismissSuggestion(${i})">✗ Skip</button>
+        </div>
+      </div>
+    `).join('')}
+    <button class="sugg-done-btn" onclick="closeSuggestions()">DONE</button>
+  `;
+
+  // Store suggestions for acceptance handling
+  overlay._suggestions = suggestions;
+  overlay.classList.add('visible');
+  overlay.scrollTop = 0;
+}
+
+function acceptSuggestion(i) {
+  const overlay = document.getElementById('sugg-overlay');
+  const s = overlay._suggestions[i];
+  const card = document.getElementById(`sugg-card-${i}`);
+
+  if (s.action === 'add-weight' || s.action === 'drop-weight') {
+    const key = overrideKey(s.phaseIdx, s.sessionId, s.move);
+    exerciseOverrides[key] = {
+      sets: s.progEx.sets,
+      load: `${s.newWeight} lb`,
+    };
+    saveOverrides();
+  } else if (s.action === 'add-reps') {
+    const key = overrideKey(s.phaseIdx, s.sessionId, s.move);
+    const currentSets = s.progEx.sets;
+    const match = currentSets.match(/^(\d+)×(\d+)/);
+    if (match) {
+      const newReps = parseInt(match[2]) + 1;
+      exerciseOverrides[key] = {
+        sets: currentSets.replace(/^(\d+)×(\d+)/, `${match[1]}×${newReps}`),
+        load: s.progEx.load,
+      };
+      saveOverrides();
+    }
+  } else if (s.action === 'add-set-all' || s.action === 'remove-set-all') {
+    const phase = allPhases[s.entry.phaseIdx];
+    const session = phase.sessions.find(sess => sess.id === s.entry.sessionId);
+    session.blocks.flatMap(b => b.sets).forEach(ex => {
+      const key = overrideKey(s.entry.phaseIdx, s.entry.sessionId, ex.move);
+      const match = ex.sets.match(/^(\d+)×/);
+      if (match) {
+        const curr = parseInt(match[1]);
+        const newSets = s.action === 'add-set-all' ? curr + 1 : Math.max(1, curr - 1);
+        exerciseOverrides[key] = {
+          sets: ex.sets.replace(/^\d+×/, `${newSets}×`),
+          load: ex.load,
+        };
+      }
+    });
+    saveOverrides();
+  }
+
+  // Mark accepted
+  card.style.opacity = '0.4';
+  card.querySelector('.sugg-actions').innerHTML = '<span style="color:#4caf72;font-family:\'DM Mono\',monospace;font-size:11px;">✓ Accepted — takes effect next session</span>';
+
+  // Refresh blocks so overrides show immediately
+  renderBlocks();
+}
+
+function dismissSuggestion(i) {
+  const card = document.getElementById(`sugg-card-${i}`);
+  card.style.opacity = '0.4';
+  card.querySelector('.sugg-actions').innerHTML = '<span style="color:var(--text3);font-family:\'DM Mono\',monospace;font-size:11px;">Skipped</span>';
+}
+
+function closeSuggestions() {
+  document.getElementById('sugg-overlay').classList.remove('visible');
   renderLog();
   showPage('log');
 }
 
+// ── RENDER LOG ──
 function renderLog() {
   const c = document.getElementById('log-list');
   if (!workoutLog.length) {
     c.innerHTML = `<div class="log-empty"><span class="big">🏋️</span>No workouts logged yet.<br>Complete a session and tap<br>"Log Today's Session."</div>`;
     return;
   }
-  c.innerHTML = workoutLog.map(e => `
-    <div class="log-entry">
+  c.innerHTML = workoutLog.map((e, idx) => {
+    const diffColors = { easy:'diff-easy', right:'diff-right', hard:'diff-hard' };
+    const diffLabels = { easy:'Easy', right:'Just Right', hard:'Hard' };
+    const exList = e.exercises ? e.exercises.map(ex => `
+      <div class="log-entry-ex">
+        <span>${ex.move}${ex.weightUsed ? ` — ${ex.weightUsed} lb` : ''}${ex.repsCompleted ? ` × ${ex.repsCompleted}` : ''}</span>
+        <span class="log-entry-ex-diff ${diffColors[ex.difficulty] || ''}">${diffLabels[ex.difficulty] || ''}</span>
+      </div>
+    `).join('') : '';
+
+    return `
+    <div class="log-entry" id="log-entry-${idx}">
       <div class="log-entry-date">${e.date}</div>
       <div class="log-entry-session">${e.phase || ''} · ${e.session}</div>
-      <div class="log-entry-detail">${e.tag}</div>
-    </div>
-  `).join('');
+      <div class="log-entry-detail" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>${e.tag}</span>
+        ${e.sessionDiff ? `<span class="${diffColors[e.sessionDiff]} log-entry-ex-diff" style="font-size:11px;">${diffLabels[e.sessionDiff]}</span>` : ''}
+      </div>
+      ${exList ? `<span class="log-entry-toggle" onclick="toggleLogEntry(${idx})">▸ Show exercises</span>
+      <div class="log-entry-exlist">${exList}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function toggleLogEntry(idx) {
+  const entry = document.getElementById(`log-entry-${idx}`);
+  const toggle = entry.querySelector('.log-entry-toggle');
+  entry.classList.toggle('expanded');
+  toggle.textContent = entry.classList.contains('expanded') ? '▾ Hide exercises' : '▸ Show exercises';
 }
 
 // ════════════════════════════════════════
@@ -766,10 +1081,13 @@ function renderLog() {
 // ════════════════════════════════════════
 function renderProgress() {
   const total = workoutLog.length;
-  const target = 54; // 18 weeks × 3 sessions
+  const target = 54;
   const pct = Math.min(100, Math.round((total / target) * 100));
   const weeksDone = Math.floor(total / 3);
   const currentPhase = total < 9 ? 1 : total < 18 ? 2 : total < 27 ? 3 : total < 30 ? 4 : total < 42 ? 5 : 6;
+
+  // Count accepted overrides
+  const overrideCount = Object.keys(exerciseOverrides).length;
 
   document.getElementById('progress-content').innerHTML = `
     <div class="prog-card">
@@ -785,11 +1103,20 @@ function renderProgress() {
       </div>
     </div>
     <div class="prog-card" style="margin-top:10px;">
+      <div class="prog-card-label">Adaptive Adjustments</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6;">
+        ${overrideCount === 0
+          ? 'No adjustments yet — log sessions and accept suggestions to personalize your program.'
+          : `<strong style="color:var(--orange)">${overrideCount}</strong> exercise adjustment${overrideCount > 1 ? 's' : ''} active. Your program has been personalized based on your performance.`}
+      </div>
+      ${overrideCount > 0 ? `<button onclick="clearOverrides()" style="margin-top:10px;padding:8px 14px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px;">RESET ALL ADJUSTMENTS</button>` : ''}
+    </div>
+    <div class="prog-card" style="margin-top:10px;">
       <div class="prog-card-label">Current Phase</div>
       <div style="font-size:13px;color:var(--text2);line-height:1.6;">
         ${total===0 ? '🔴 Not started — go get your first session in.' :
-          currentPhase===1 ? '🟡 <strong>Phase 1 — Foundation:</strong> Master the patterns. 2×40 lb.' :
-          currentPhase===2 ? '🟠 <strong>Phase 2 — Volume:</strong> Added sets, first 6 new moves.' :
+          currentPhase===1 ? '🟡 <strong>Phase 1 — Foundation:</strong> Single bell. 3 sets. Master the patterns.' :
+          currentPhase===2 ? '🟠 <strong>Phase 2 — Volume:</strong> Double bells return. Added sets, first 6 new moves.' :
           currentPhase===3 ? '🟢 <strong>Phase 3 — Intensity:</strong> 53 lb on swings/DL. Snatch begins.' :
           currentPhase===4 ? '🔵 <strong>Phase 4 — Deload:</strong> Rest up. This is where gains happen.' :
           currentPhase===5 ? '🟣 <strong>Phase 5 — Advanced:</strong> Turkish Get-Up. Pistol squat. 62 lb.' :
@@ -808,6 +1135,15 @@ function renderProgress() {
         </div>`;
       }).join('')}
     </div>`;
+}
+
+function clearOverrides() {
+  if (confirm('Reset all exercise adjustments to programmed defaults?')) {
+    exerciseOverrides = {};
+    saveOverrides();
+    renderBlocks();
+    renderProgress();
+  }
 }
 
 // ════════════════════════════════════════
