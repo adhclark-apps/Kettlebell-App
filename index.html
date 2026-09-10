@@ -51,8 +51,8 @@
   <div class="section" style="margin-top:20px;">
     <div class="hero-label">Workout History</div>
     <div class="log-title">TRAINING <span>LOG</span></div>
-    <button class="log-btn" onclick="logWorkout()">+ LOG TODAY'S SESSION</button>
-    <div id="log-list" style="margin-top:16px;"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:1px;margin-top:8px;margin-bottom:4px;">Check off all sets in a session to save it here.</div>
+    <div id="log-list" style="margin-top:12px;"></div>
   </div>
 </div>
 
@@ -133,7 +133,7 @@
     <div class="timer-number" id="timer-number">60</div>
   </div>
   <div class="timer-controls">
-    <button class="t-btn secondary" onclick="closeTimer()">Cancel</button>
+    <button class="t-btn secondary" onclick="closeTimer()">Skip Rest</button>
     <button class="t-btn primary" id="timer-toggle-btn" onclick="toggleTimer()">Start</button>
   </div>
 </div>

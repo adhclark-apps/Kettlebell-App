@@ -47,6 +47,11 @@ const videos = {
   "Turkish Get-Up + Press":        "https://www.youtube.com/watch?v=lpltjWHd0ek",
   "Double KB Snatch":              "https://www.youtube.com/watch?v=E5CUdkcNT98",
   "KB Full Complex":               "https://www.youtube.com/watch?v=fRdlDRkAT-w",
+  // Bodyweight moves
+  "Push-Ups":                      "https://www.youtube.com/watch?v=IODxDxX7oi4",
+  "Inverted Row":                   "https://www.youtube.com/watch?v=T4I9PjMm8Xo",
+  "Hollow Body Hold":               "https://www.youtube.com/watch?v=LlDNef_Ztsc",
+  "Jump Squats":                    "https://www.youtube.com/watch?v=CVaEhXotL7M",
 };
 
 const tagColors = {
@@ -70,11 +75,14 @@ const allPhases = [
       { id:"D1", tag:"STRENGTH + POWER", blocks:[
         { title:"Power Block — 12 min", sets:[
           {move:"KB Swing",        sets:"3×10",     load:"40 lb", note:"Hip hinge — drive with glutes, not back. Own this before going double."},
-          {move:"KB Push Press",   sets:"3×5/side", load:"40 lb", note:"Leg drive initiates — arm locks out fully overhead"},
+          {move:"KB Push Press",   sets:"3×5/side", load:"40 lb", note:"Leg drive initiates — arm locks out fully overhead",
+           superset:{move:"Push-Ups", sets:"3×8", load:"Bodyweight", note:"Straight into push-ups after each set — no rest between"}},
         ]},
         { title:"Strength Superset — 15 min", sets:[
-          {move:"KB Goblet Squat", sets:"3×8",      load:"40 lb", note:"Single bell goblet — elbows in, brace hard, sit deep"},
-          {move:"Renegade Row",    sets:"3×4/side", load:"40 lb", note:"One bell only — zero hip rotation, core must win"},
+          {move:"KB Goblet Squat", sets:"3×8",      load:"40 lb", note:"Single bell goblet — elbows in, brace hard, sit deep",
+           superset:{move:"Jump Squats", sets:"3×6", load:"Bodyweight", note:"Immediately after goblet squats — land soft, full depth"}},
+          {move:"Renegade Row",    sets:"3×4/side", load:"40 lb", note:"One bell only — zero hip rotation, core must win",
+           superset:{move:"Push-Ups", sets:"3×6", load:"Bodyweight", note:"Straight into push-ups after each row set"}},
         ]},
         { title:"Finisher — 6 min EMOM", sets:[
           {move:"KB Goblet Squat",       sets:"6 reps", load:"40 lb", note:"Odd minutes — quality over speed"},
@@ -85,19 +93,22 @@ const allPhases = [
         { title:"Ballistic Circuit — 15 min (3 rounds)", sets:[
           {move:"Single-Arm KB Swing",    sets:"10/side", load:"40 lb", note:"Switch hands each set — crisp hip snap every rep"},
           {move:"KB High Pull",           sets:"6/side",  load:"40 lb", note:"Elbow leads — not the wrist"},
-          {move:"KB Alternating Deadlift",sets:"8/side",  load:"40 lb", note:"Full hinge — neutral spine throughout"},
+          {move:"KB Alternating Deadlift",sets:"8/side",  load:"40 lb", note:"Full hinge — neutral spine throughout",
+           superset:{move:"Jump Squats", sets:"8", load:"Bodyweight", note:"Explosive finisher at end of each circuit round — land soft"}},
         ]},
         { title:"Core Triplet — 10 min (3 rounds)", sets:[
           {move:"KB Windmill",    sets:"4/side",        load:"40 lb", note:"3s lowering — slow and deliberate, feel the stretch"},
           {move:"Suitcase Carry", sets:"30 yards/side", load:"40 lb", note:"Tall posture — never lean into the bell"},
-          {move:"KB Halo",        sets:"6/direction",   load:"40 lb", note:"Controlled arc — full shoulder mobility"},
+          {move:"KB Halo",        sets:"6/direction",   load:"40 lb", note:"Controlled arc — full shoulder mobility",
+           superset:{move:"Hollow Body Hold", sets:"20s", load:"Bodyweight", note:"After halos — flat back, lower back pressed to floor"}},
         ]},
       ]},
       { id:"D3", tag:"PULL + BURN", blocks:[
         { title:"Hinge + Pull Block — 18 min", sets:[
           {move:"KB Romanian Deadlift", sets:"3×8",      load:"40 lb", note:"Single bell — hamstring tension at bottom, don't round"},
           {move:"KB Clean",             sets:"3×4/side", load:"40 lb", note:"Vertical path — punch elbow through the rack"},
-          {move:"Single-Arm KB Row",    sets:"3×8/side", load:"40 lb", note:"Full scapular retraction at the top"},
+          {move:"Single-Arm KB Row",    sets:"3×8/side", load:"40 lb", note:"Full scapular retraction at the top",
+           superset:{move:"Inverted Row", sets:"3×6", load:"Bodyweight", note:"Under a table or low bar — chest to bar, control the descent"}},
           {move:"KB Sumo Deadlift",     sets:"3×6",      load:"40 lb", note:"Single bell between legs — drive knees out hard"},
         ]},
         { title:"Complex Finisher — 2 rounds (rest 90s)", sets:[
@@ -494,6 +505,9 @@ const planPhases = [
 // STATE
 // ════════════════════════════════════════
 let activePhaseIdx = 0;
+let exerciseOverrides = JSON.parse(localStorage.getItem('kbOverrides') || '{}');
+function saveOverrides() { localStorage.setItem('kbOverrides', JSON.stringify(exerciseOverrides)); }
+function overrideKey(phaseIdx, sessionId, moveName) { return `${phaseIdx}-${sessionId}-${moveName}`; }
 let activeSession = 'D1';
 let expandedBlock = null;
 let expandedPlanPhase = null;
@@ -533,6 +547,7 @@ function switchPhase(i) {
   activePhaseIdx = i;
   activeSession = 'D1';
   expandedBlock = null;
+  resetTracking();
   renderPhaseSelector();
   renderPhaseBanner();
   renderSessionTabs();
@@ -559,6 +574,7 @@ function renderPhaseBanner() {
 function switchSession(sid) {
   activeSession = sid;
   expandedBlock = null;
+  resetTracking();
   renderSessionTabs();
   renderBlocks();
 }
@@ -578,7 +594,57 @@ function renderSessionTabs() {
 }
 
 // ════════════════════════════════════════
-// BLOCKS
+// WORKOUT TRACKING STATE
+// ════════════════════════════════════════
+// setTracking: { "bi-ei-si": { reps, diff } }
+let setTracking = {};
+let activeExKey = null; // "bi-ei" of currently active exercise
+
+// Rest defaults per block title keyword
+function restDefaultForBlock(title) {
+  const t = title.toLowerCase();
+  if (t.includes('finisher') || t.includes('complex') || t.includes('amrap')) return 90;
+  if (t.includes('power') || t.includes('strength') || t.includes('hinge') || t.includes('pull') || t.includes('press')) return 90;
+  if (t.includes('circuit') || t.includes('ballistic') || t.includes('core') || t.includes('triplet')) return 60;
+  return 60;
+}
+
+// Parse set count from programmed string e.g. "3×10" → 3, "4×5/side" → 4
+function parseSets(setsStr) {
+  const m = setsStr.match(/^(\d+)/);
+  return m ? parseInt(m[1]) : 3;
+}
+
+// Get unique key for a set
+function setKey(bi, ei, si) { return `${bi}-${ei}-${si}`; }
+
+// Check if all sets for an exercise are done
+function exDone(bi, ei, totalSets) {
+  for (let si = 0; si < totalSets; si++) {
+    if (!setTracking[setKey(bi, ei, si)]) return false;
+  }
+  return true;
+}
+
+// Count total sets done across whole session
+function totalSetsDone() {
+  return Object.keys(setTracking).length;
+}
+
+// Count total sets in session
+function totalSetsInSession() {
+  const phase = allPhases[activePhaseIdx];
+  const session = phase.sessions.find(s => s.id === activeSession);
+  return session.blocks.flatMap(b => b.sets).reduce((acc, ex) => acc + parseSets(ex.sets), 0);
+}
+
+function resetTracking() {
+  setTracking = {};
+  activeExKey = null;
+}
+
+// ════════════════════════════════════════
+// BLOCKS — TRACKING MODE
 // ════════════════════════════════════════
 function toggleBlock(idx) {
   expandedBlock = expandedBlock === idx ? null : idx;
@@ -589,32 +655,107 @@ function renderBlocks() {
   const phase = allPhases[activePhaseIdx];
   const session = phase.sessions.find(s => s.id === activeSession);
   const color = tagColors[session.tag];
-  document.getElementById('blocks-container').innerHTML = session.blocks.map((block, bi) => {
+  const totalDone = totalSetsDone();
+  const totalSets = totalSetsInSession();
+
+  // Progress bar
+  const pct = totalSets > 0 ? Math.round((totalDone / totalSets) * 100) : 0;
+  const progressHtml = `
+    <div class="workout-progress-bar">
+      <div class="workout-progress-fill" style="width:${pct}%"></div>
+    </div>`;
+
+  const blocksHtml = session.blocks.map((block, bi) => {
     const isOpen = expandedBlock === bi;
-    const exRows = block.sets.map(ex => {
+    const blockRest = restDefaultForBlock(block.title);
+
+    const exRows = block.sets.map((ex, ei) => {
+      const oKey = overrideKey(activePhaseIdx, activeSession, ex.move);
+      const ov = exerciseOverrides[oKey];
+      const dispSets = ov ? ov.sets : ex.sets;
+      const dispLoad = ov ? ov.load : ex.load;
+      const numSets = parseSets(dispSets);
       const url = videos[ex.move];
       const watchBtn = url ? `<a class="watch-btn" href="${url}" target="_blank" rel="noopener"
         style="color:${color};border-color:${color}55;background:${color}18">▶ WATCH</a>` : '';
-      return `<div class="ex-row">
-        <div>
-          <div class="ex-name">${ex.move}</div>
-          ${ex.note ? `<div class="ex-note">${ex.note}</div>` : ''}
-          <div class="ex-actions">
-            ${watchBtn}
-            <button class="timer-btn" onclick="openTimer('${ex.move.replace(/'/g,"\\'")}')">⏱ REST</button>
+      const allDone = exDone(bi, ei, numSets);
+      const isActive = activeExKey === `${bi}-${ei}`;
+
+      // Build set rows
+      const setRows = Array.from({length: numSets}, (_, si) => {
+        const k = setKey(bi, ei, si);
+        const logged = setTracking[k];
+        const isActiveSet = !logged && isActive && !Object.keys(setTracking).some(key => key.startsWith(`${bi}-${ei}-`) && !setTracking[key] && parseInt(key.split('-')[2]) < si);
+        return `
+          <div class="ex-set-row ${logged ? 'done' : ''} ${isActiveSet ? 'active-set' : ''}" id="set-${bi}-${ei}-${si}">
+            <button class="set-check-btn" onclick="checkSet(${bi},${ei},${si},${blockRest},'${ex.move.replace(/'/g,"\\'")}')">
+              ${logged ? '✓' : si + 1}
+            </button>
+            <span class="set-label">Set ${si + 1}</span>
+            <div class="set-inputs">
+              <div class="set-input-wrap">
+                <label>Reps</label>
+                <input type="number" inputmode="numeric" id="reps-${bi}-${ei}-${si}"
+                  value="${logged ? logged.reps : ''}"
+                  placeholder="${dispSets.match(/\d+$/)?.[0] || '8'}"
+                  ${logged ? 'disabled' : ''}
+                  style="${logged ? 'opacity:.5' : ''}" />
+              </div>
+              <div class="set-input-wrap">
+                <label>Weight</label>
+                <input type="number" inputmode="decimal" id="wt-${bi}-${ei}-${si}"
+                  value="${logged ? logged.weight : ''}"
+                  placeholder="${dispLoad.replace(/[^0-9.]/g,'') || '40'}"
+                  ${logged ? 'disabled' : ''}
+                  style="${logged ? 'opacity:.5' : ''}" />
+              </div>
+            </div>
+            <div class="set-diff-mini">
+              <button title="Easy" onclick="setDiffMini(${bi},${ei},${si},'easy',this)"
+                class="${logged && logged.diff==='easy' ? 'sel-easy' : ''}" ${logged ? 'disabled' : ''}>😤</button>
+              <button title="Just Right" onclick="setDiffMini(${bi},${ei},${si},'right',this)"
+                class="${logged && logged.diff==='right' ? 'sel-right' : ''}" ${logged ? 'disabled' : ''}>✅</button>
+              <button title="Hard" onclick="setDiffMini(${bi},${ei},${si},'hard',this)"
+                class="${logged && logged.diff==='hard' ? 'sel-hard' : ''}" ${logged ? 'disabled' : ''}>🔥</button>
+            </div>
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="ex-row ${allDone ? 'all-done' : ''} ${isActive ? 'active-ex' : ''}" id="ex-${bi}-${ei}">
+          <div style="flex:1;">
+            <div class="ex-name">${ex.move}</div>
+            ${ex.note ? `<div class="ex-note">${ex.note}</div>` : ''}
+            <div class="ex-actions">${watchBtn}</div>
+            <div class="ex-set-list">${setRows}</div>
+            ${ex.superset ? `
+              <div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px dashed var(--border2);border-radius:8px;">
+                <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--orange);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">⚡ Superset — no rest</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <div>
+                    <div style="font-size:13px;font-weight:700;color:var(--text);">${ex.superset.move}</div>
+                    ${ex.superset.note ? `<div class="ex-note">${ex.superset.note}</div>` : ''}
+                    ${videos[ex.superset.move] ? `<a class="watch-btn" href="${videos[ex.superset.move]}" target="_blank" rel="noopener" style="color:var(--text3);border-color:var(--border2);background:transparent;margin-top:6px;display:inline-flex;">▶ WATCH</a>` : ''}
+                  </div>
+                  <div style="text-align:right;flex-shrink:0;">
+                    <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text3);">${ex.superset.sets}</div>
+                    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);">${ex.superset.load}</div>
+                  </div>
+                </div>
+              </div>` : ''}
           </div>
-        </div>
-        <div class="ex-right">
-          <div class="ex-sets" style="color:${color}">${ex.sets}</div>
-          <div class="ex-load">${ex.load}</div>
-        </div>
-      </div>`;
+          <div class="ex-right">
+            <div class="ex-sets" style="color:${color}">${dispSets}</div>
+            <div class="ex-load">${dispLoad}</div>
+          </div>
+        </div>`;
     }).join('');
+
     return `<div class="block-wrap">
       <button class="block-header ${isOpen ? 'open' : ''}" onclick="toggleBlock(${bi})"
         style="border-color:${isOpen ? color : 'var(--border)'}">
         <div>
-          <div class="block-num" style="color:${color}">Block ${bi + 1}</div>
+          <div class="block-num" style="color:${color}">Block ${bi + 1} · Rest ${blockRest}s</div>
           <div class="block-title">${block.title}</div>
         </div>
         <div class="block-chevron" style="background:${isOpen ? color : 'var(--bg3)'}">${isOpen ? '−' : '+'}</div>
@@ -622,6 +763,234 @@ function renderBlocks() {
       ${isOpen ? `<div class="block-body" style="border-color:${color}">${exRows}</div>` : ''}
     </div>`;
   }).join('');
+
+  // Finish button — show when all sets done
+  const finishBtn = totalDone > 0 && totalDone >= totalSets
+    ? `<div class="finish-session-bar"><button class="finish-session-btn" onclick="finishSession()">🏁 FINISH & SAVE SESSION</button></div>`
+    : '';
+
+  document.getElementById('blocks-container').innerHTML = progressHtml + blocksHtml + finishBtn;
+}
+
+// ── SET DIFF SELECTION ──
+const pendingDiffs = {}; // "bi-ei-si" → diff before checkoff
+
+function setDiffMini(bi, ei, si, val, btn) {
+  const k = setKey(bi, ei, si);
+  pendingDiffs[k] = val;
+  const row = document.getElementById(`set-${bi}-${ei}-${si}`);
+  row.querySelectorAll('.set-diff-mini button').forEach(b => {
+    b.classList.remove('sel-easy','sel-right','sel-hard');
+  });
+  btn.classList.add(`sel-${val}`);
+}
+
+// ── CHECK OFF A SET ──
+function checkSet(bi, ei, si, blockRest, moveName) {
+  const k = setKey(bi, ei, si);
+  if (setTracking[k]) return; // already done
+
+  const repsEl = document.getElementById(`reps-${bi}-${ei}-${si}`);
+  const wtEl   = document.getElementById(`wt-${bi}-${ei}-${si}`);
+  const diff   = pendingDiffs[k] || 'right';
+
+  setTracking[k] = {
+    reps:   repsEl ? repsEl.value : '',
+    weight: wtEl   ? wtEl.value   : '',
+    diff,
+  };
+  delete pendingDiffs[k];
+
+  activeExKey = `${bi}-${ei}`;
+
+  // Advance to next incomplete exercise after timer
+  const phase = allPhases[activePhaseIdx];
+  const session = phase.sessions.find(s => s.id === activeSession);
+
+  // Find next incomplete set/exercise
+  let nextExKey = null;
+  outer: for (let b = 0; b < session.blocks.length; b++) {
+    for (let e = 0; e < session.blocks[b].sets.length; e++) {
+      const ex = session.blocks[b].sets[e];
+      const oKey = overrideKey(activePhaseIdx, activeSession, ex.move);
+      const ov = exerciseOverrides[oKey];
+      const dispSets = ov ? ov.sets : ex.sets;
+      const n = parseSets(dispSets);
+      if (!exDone(b, e, n)) { nextExKey = `${b}-${e}`; break outer; }
+    }
+  }
+
+  renderBlocks();
+
+  // Re-open block containing this exercise
+  if (expandedBlock !== bi) {
+    expandedBlock = bi;
+    renderBlocks();
+  }
+
+  // Auto-start rest timer with block default
+  startAutoTimer(blockRest, moveName, nextExKey);
+}
+
+// ── AUTO REST TIMER ──
+function startAutoTimer(seconds, moveName, nextExKey) {
+  clearInterval(timerInterval);
+  timerDuration = seconds;
+  timerRemaining = seconds;
+  timerRunning = false;
+  timerNextExKey = nextExKey; // store for closeTimer / toggleTimer to use
+
+  document.querySelectorAll('.preset-btn').forEach(b => {
+    b.classList.remove('sel');
+    if ((b.textContent === '60s' && seconds === 60) ||
+        (b.textContent === '90s' && seconds === 90) ||
+        (b.textContent === '2m'  && seconds === 120)) b.classList.add('sel');
+  });
+
+  document.getElementById('timer-exercise-name').textContent = moveName;
+  document.getElementById('timer-toggle-btn').textContent = 'Pause';
+  updateTimerDisplay();
+  document.getElementById('timer-overlay').classList.add('visible');
+
+  timerRunning = true;
+  timerInterval = setInterval(() => {
+    timerRemaining--;
+    updateTimerDisplay();
+    if (timerRemaining <= 0) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      document.getElementById('timer-overlay').classList.remove('visible');
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      if (timerNextExKey) {
+        activeExKey = timerNextExKey;
+        timerNextExKey = null;
+        renderBlocks();
+        const [nb] = activeExKey.split('-').map(Number);
+        if (expandedBlock !== nb) { expandedBlock = nb; renderBlocks(); }
+        setTimeout(() => {
+          const el = document.getElementById(`ex-${activeExKey}`);
+          if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+        }, 200);
+      }
+    }
+  }, 1000);
+}
+
+// ── FINISH SESSION — build log entry from setTracking ──
+function finishSession() {
+  const phase = allPhases[activePhaseIdx];
+  const session = phase.sessions.find(s => s.id === activeSession);
+  const dayLabels = { D1:'Day 1', D2:'Day 2', D3:'Day 3' };
+
+  let globalDiffs = [];
+  const exerciseData = [];
+  session.blocks.forEach((block, bi) => {
+    block.sets.forEach((ex, ei) => {
+      const oKey = overrideKey(activePhaseIdx, activeSession, ex.move);
+      const ov = exerciseOverrides[oKey];
+      const dispSets = ov ? ov.sets : ex.sets;
+      const dispLoad = ov ? ov.load : ex.load;
+      const numSets = parseSets(dispSets);
+      const setData = [];
+      for (let si = 0; si < numSets; si++) {
+        const k = setKey(bi, ei, si);
+        if (setTracking[k]) setData.push(setTracking[k]);
+      }
+      const diffs = setData.map(s => s.diff).filter(Boolean);
+      globalDiffs = globalDiffs.concat(diffs);
+      const aggDiff = diffs.includes('hard') ? 'hard' : diffs.filter(d => d==='easy').length > diffs.length/2 ? 'easy' : 'right';
+      const weights = setData.map(s => parseFloat(s.weight)).filter(n => !isNaN(n));
+      const reps = setData.map(s => s.reps).filter(Boolean);
+      exerciseData.push({
+        move: ex.move,
+        programmedSets: dispSets,
+        programmedLoad: dispLoad,
+        setsCompleted: String(setData.length),
+        repsCompleted: reps.length ? reps[0] : '',
+        weightUsed: weights.length ? String(Math.max(...weights)) : '',
+        difficulty: aggDiff,
+      });
+    });
+  });
+
+  const sessionDiffAgg = globalDiffs.includes('hard') ? 'hard' : globalDiffs.filter(d => d==='easy').length > globalDiffs.length/2 ? 'easy' : 'right';
+  const todayISO = new Date().toISOString().split('T')[0];
+
+  const inner = document.getElementById('log-overlay-inner');
+  inner.innerHTML = `
+    <div class="log-overlay-title">SAVE <span>SESSION</span></div>
+    <div class="log-overlay-sub">${phase.label} · ${dayLabels[activeSession]}</div>
+    <div class="log-ex-card" style="margin-bottom:14px;">
+      <div class="log-field" style="width:100%;">
+        <label>Session Date</label>
+        <input type="date" id="log-date" value="${todayISO}"
+          style="width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:16px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none;" />
+      </div>
+    </div>
+    <div class="log-session-diff">
+      <div class="log-session-diff-label">Session Difficulty (auto-calculated — adjust if needed)</div>
+      <div class="diff-row">
+        <button class="diff-btn easy ${sessionDiffAgg==='easy'?'sel':''}" onclick="selectSessionDiff('easy',this)">😤 Easy</button>
+        <button class="diff-btn right ${sessionDiffAgg==='right'?'sel':''}" onclick="selectSessionDiff('right',this)">✅ Just Right</button>
+        <button class="diff-btn hard ${sessionDiffAgg==='hard'?'sel':''}" onclick="selectSessionDiff('hard',this)">🔥 Hard</button>
+      </div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Summary</div>
+      ${exerciseData.map(e => `
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);padding:4px 0;border-bottom:1px solid var(--border);">
+          <span>${e.move}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--orange);">${e.setsCompleted}×${e.repsCompleted||'?'} @ ${e.weightUsed||'?'} lb</span>
+        </div>`).join('')}
+    </div>
+    <button class="log-submit-btn" onclick="submitFromTracking()">SAVE TO LOG</button>
+    <button class="log-cancel-btn" onclick="closeLogOverlay()">Cancel</button>
+  `;
+
+  // Store exerciseData for submitFromTracking to access
+  window._pendingExerciseData = exerciseData;
+  sessionDiff = sessionDiffAgg;
+  document.getElementById('log-overlay').classList.add('visible');
+  document.getElementById('log-overlay').scrollTop = 0;
+}
+
+function submitFromTracking() {
+  const phase = allPhases[activePhaseIdx];
+  const session = phase.sessions.find(s => s.id === activeSession);
+  const dayLabels = { D1:'Day 1', D2:'Day 2', D3:'Day 3' };
+  const exerciseData = window._pendingExerciseData || [];
+
+  const dateEl = document.getElementById('log-date');
+  const selectedDate = dateEl && dateEl.value
+    ? new Date(dateEl.value + 'T12:00:00').toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'})
+    : new Date().toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
+  const entry = {
+    id: Date.now(),
+    date: selectedDate,
+    session: dayLabels[activeSession],
+    sessionId: activeSession,
+    phaseIdx: activePhaseIdx,
+    tag: session.tag,
+    phase: phase.label,
+    sessionDiff: sessionDiff || 'right',
+    exercises: exerciseData,
+  };
+
+  workoutLog.unshift(entry);
+  localStorage.setItem('kbLog', JSON.stringify(workoutLog));
+  closeLogOverlay();
+  resetTracking();
+  renderBlocks();
+
+  const allExercises = session.blocks.flatMap(b => b.sets);
+  const suggestions = generateSuggestions(entry, allExercises);
+  if (suggestions.length) {
+    showSuggestions(suggestions, entry);
+  } else {
+    renderLog();
+    showPage('log');
+  }
 }
 
 // ════════════════════════════════════════
@@ -671,30 +1040,34 @@ function renderPlan() {
 }
 
 // ════════════════════════════════════════
-// REST TIMER
+// REST TIMER — shared state (auto-timer lives in startAutoTimer above)
 // ════════════════════════════════════════
 let timerDuration = 60, timerRemaining = 60, timerRunning = false, timerInterval = null;
+let timerNextExKey = null;
 const CIRC = 628;
 
 function setPreset(sec, btn) {
   document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
+  clearInterval(timerInterval);
   timerDuration = sec; timerRemaining = sec; timerRunning = false;
-  clearInterval(timerInterval);
   document.getElementById('timer-toggle-btn').textContent = 'Start';
   updateTimerDisplay();
-}
-function openTimer(name) {
-  document.getElementById('timer-exercise-name').textContent = name;
-  timerRemaining = timerDuration; timerRunning = false;
-  clearInterval(timerInterval);
-  document.getElementById('timer-toggle-btn').textContent = 'Start';
-  updateTimerDisplay();
-  document.getElementById('timer-overlay').classList.add('visible');
 }
 function closeTimer() {
   clearInterval(timerInterval); timerRunning = false;
   document.getElementById('timer-overlay').classList.remove('visible');
+  if (timerNextExKey) {
+    activeExKey = timerNextExKey;
+    timerNextExKey = null;
+    renderBlocks();
+    const [nb] = activeExKey.split('-').map(Number);
+    if (expandedBlock !== nb) { expandedBlock = nb; renderBlocks(); }
+    setTimeout(() => {
+      const el = document.getElementById(`ex-${activeExKey}`);
+      if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 200);
+  }
 }
 function toggleTimer() {
   if (timerRunning) {
@@ -708,10 +1081,19 @@ function toggleTimer() {
       updateTimerDisplay();
       if (timerRemaining <= 0) {
         clearInterval(timerInterval); timerRunning = false;
-        document.getElementById('timer-toggle-btn').textContent = 'Start';
+        document.getElementById('timer-overlay').classList.remove('visible');
         if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        timerRemaining = timerDuration;
-        setTimeout(updateTimerDisplay, 300);
+        if (timerNextExKey) {
+          activeExKey = timerNextExKey;
+          timerNextExKey = null;
+          renderBlocks();
+          const [nb] = activeExKey.split('-').map(Number);
+          if (expandedBlock !== nb) { expandedBlock = nb; renderBlocks(); }
+          setTimeout(() => {
+            const el = document.getElementById(`ex-${activeExKey}`);
+            if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+          }, 200);
+        }
       }
     }, 1000);
   }
@@ -731,99 +1113,8 @@ function updateTimerDisplay() {
 // SMART LOGGING SYSTEM
 // ════════════════════════════════════════
 
-// exerciseOverrides: stores accepted suggestion adjustments per exercise key
-// key format: "phaseIdx-sessionId-moveName"
-let exerciseOverrides = JSON.parse(localStorage.getItem('kbOverrides') || '{}');
-
-function saveOverrides() {
-  localStorage.setItem('kbOverrides', JSON.stringify(exerciseOverrides));
-}
-
-// Get override key for an exercise
-function overrideKey(phaseIdx, sessionId, moveName) {
-  return `${phaseIdx}-${sessionId}-${moveName}`;
-}
-
-// Get effective sets/load for an exercise (with overrides applied)
-function getEffective(phaseIdx, sessionId, move, field) {
-  const key = overrideKey(phaseIdx, sessionId, move, field);
-  return exerciseOverrides[key] ? exerciseOverrides[key][field] : null;
-}
-
-// Open the logging overlay for current session
-function logWorkout() {
-  const phase = allPhases[activePhaseIdx];
-  const session = phase.sessions.find(s => s.id === activeSession);
-  const overlay = document.getElementById('log-overlay');
-  const inner = document.getElementById('log-overlay-inner');
-
-  // Collect all exercises across all blocks
-  const allExercises = session.blocks.flatMap(b => b.sets);
-
-  const todayISO = new Date().toISOString().split('T')[0];
-
-  inner.innerHTML = `
-    <div class="log-overlay-title">LOG <span>SESSION</span></div>
-    <div class="log-overlay-sub">${phase.label} · ${{D1:'Day 1',D2:'Day 2',D3:'Day 3'}[activeSession]}</div>
-
-    <div class="log-ex-card" style="margin-bottom:14px;">
-      <div class="log-field" style="width:100%;">
-        <label>Session Date</label>
-        <input type="date" id="log-date" value="${todayISO}"
-          style="width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:16px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none;" />
-      </div>
-    </div>
-
-    <div class="log-session-diff">
-      <div class="log-session-diff-label">Overall Session Difficulty</div>
-      <div class="diff-row">
-        <button class="diff-btn easy" onclick="selectSessionDiff('easy',this)">😤 Easy</button>
-        <button class="diff-btn right" onclick="selectSessionDiff('right',this)">✅ Just Right</button>
-        <button class="diff-btn hard" onclick="selectSessionDiff('hard',this)">🔥 Hard</button>
-      </div>
-    </div>
-
-    ${allExercises.map((ex, i) => {
-      const oKey = overrideKey(activePhaseIdx, activeSession, ex.move);
-      const ov = exerciseOverrides[oKey];
-      const dispSets = ov ? ov.sets : ex.sets;
-      const dispLoad = ov ? ov.load : ex.load;
-      return `
-      <div class="log-ex-card">
-        <div class="log-ex-card-name">${ex.move}</div>
-        <div class="log-ex-card-prog">Programmed: ${dispSets} · ${dispLoad}</div>
-        <div class="log-fields" style="grid-template-columns:1fr 1fr 1fr;">
-          <div class="log-field">
-            <label>Sets Done</label>
-            <input type="number" inputmode="numeric" id="log-sets-${i}" placeholder="${dispSets.match(/^(\d+)/)?.[1] || '3'}" />
-          </div>
-          <div class="log-field">
-            <label>Reps/Set</label>
-            <input type="number" inputmode="numeric" id="log-reps-${i}" placeholder="${dispSets.match(/\d+$/)?.[0] || '8'}" />
-          </div>
-          <div class="log-field">
-            <label>Weight (lb)</label>
-            <input type="number" inputmode="decimal" id="log-weight-${i}" placeholder="${dispLoad.replace(/[^0-9]/g,'') || '40'}" />
-          </div>
-        </div>
-        <div class="diff-row">
-          <button class="diff-btn easy" onclick="selectDiff(${i},'easy',this)">😤 Easy</button>
-          <button class="diff-btn right" onclick="selectDiff(${i},'right',this)">✅ Just Right</button>
-          <button class="diff-btn hard" onclick="selectDiff(${i},'hard',this)">🔥 Hard</button>
-        </div>
-      </div>`;
-    }).join('')}
-
-    <button class="log-submit-btn" onclick="submitLog()">SAVE SESSION</button>
-    <button class="log-cancel-btn" onclick="closeLogOverlay()">Cancel</button>
-  `;
-
-  overlay.classList.add('visible');
-  overlay.scrollTop = 0;
-}
-
+// Shared state for log overlay
 let sessionDiff = null;
-const exDiffs = {};
 
 function selectSessionDiff(val, btn) {
   sessionDiff = val;
@@ -831,138 +1122,67 @@ function selectSessionDiff(val, btn) {
   btn.classList.add('sel');
 }
 
-function selectDiff(idx, val, btn) {
-  exDiffs[idx] = val;
-  btn.parentElement.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel');
-}
-
 function closeLogOverlay() {
   document.getElementById('log-overlay').classList.remove('visible');
   sessionDiff = null;
-  Object.keys(exDiffs).forEach(k => delete exDiffs[k]);
 }
 
-function submitLog() {
-  const phase = allPhases[activePhaseIdx];
-  const session = phase.sessions.find(s => s.id === activeSession);
-  const allExercises = session.blocks.flatMap(b => b.sets);
-  const dayLabels = { D1:'Day 1', D2:'Day 2', D3:'Day 3' };
-
-  // Collect logged data per exercise
-  const exerciseData = allExercises.map((ex, i) => {
-    const weightEl = document.getElementById(`log-weight-${i}`);
-    const repsEl  = document.getElementById(`log-reps-${i}`);
-    const setsEl  = document.getElementById(`log-sets-${i}`);
-    return {
-      move: ex.move,
-      programmedSets: ex.sets,
-      programmedLoad: ex.load,
-      setsCompleted:  setsEl  ? setsEl.value  : '',
-      repsCompleted:  repsEl  ? repsEl.value  : '',
-      weightUsed:     weightEl ? weightEl.value : '',
-      difficulty: exDiffs[i] || 'right',
-    };
-  });
-
-  const dateEl = document.getElementById('log-date');
-  const selectedDate = dateEl && dateEl.value
-    ? new Date(dateEl.value + 'T12:00:00').toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'})
-    : new Date().toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'});
-
-  const entry = {
-    id: Date.now(),
-    date: selectedDate,
-    session: dayLabels[activeSession],
-    sessionId: activeSession,
-    phaseIdx: activePhaseIdx,
-    tag: session.tag,
-    phase: phase.label,
-    sessionDiff: sessionDiff || 'right',
-    exercises: exerciseData,
-  };
-
-  workoutLog.unshift(entry);
-  localStorage.setItem('kbLog', JSON.stringify(workoutLog));
-  closeLogOverlay();
-
-  // Generate suggestions
-  const suggestions = generateSuggestions(entry, allExercises);
-  if (suggestions.length) {
-    showSuggestions(suggestions, entry);
-  } else {
-    renderLog();
-    showPage('log');
-  }
-}
-
-// ── SUGGESTION ENGINE ──
+// ── SUGGESTION ENGINE — load-free progression ──
 function generateSuggestions(entry, allExercises) {
   const suggestions = [];
+  const anyWeightLogged = entry.exercises.some(e => parseFloat(e.weightUsed) > 0);
 
-  // Session-wide suggestion
   if (entry.sessionDiff === 'easy') {
     suggestions.push({
-      type: 'session',
-      title: 'Session felt Easy',
-      text: 'You crushed this one. Consider adding 1 set to all main lifts next session, or bump weight by 5 lb across the board.',
-      action: 'add-set-all',
-      entry,
-      allExercises,
+      type: 'session', title: 'Session felt Easy',
+      text: anyWeightLogged
+        ? 'Nice work. Add 1 set to each main lift next session, or shorten rest by 10 seconds across the board.'
+        : 'Nice work. Add 2 reps to every exercise next session, or add 1 full set to the main lifts.',
+      action: 'add-reps-all', entry, allExercises,
     });
   } else if (entry.sessionDiff === 'hard') {
     suggestions.push({
-      type: 'session',
-      title: 'Session felt Hard',
-      text: 'That\'s okay — it means you\'re working. Remove 1 set from all main lifts next session and keep the same weight until it feels Right.',
-      action: 'remove-set-all',
-      entry,
-      allExercises,
+      type: 'session', title: 'Session felt Hard',
+      text: 'Totally fine — it means you\'re working. Drop 2 reps per set on all main lifts next session and hold until it feels Just Right.',
+      action: 'drop-reps-all', entry, allExercises,
     });
   }
 
-  // Per-exercise suggestions
   entry.exercises.forEach((ex, i) => {
     const progEx = allExercises[i];
-    const weight = parseFloat(ex.weightUsed);
+    if (!progEx) return;
     const reps = parseFloat(ex.repsCompleted);
     const progReps = parseFloat(ex.programmedSets.match(/\d+$/)?.[0] || 0);
-    const progWeight = parseFloat(ex.programmedLoad.replace(/[^0-9.]/g,'') || 0);
+    const progSetsCount = parseFloat(ex.programmedSets.match(/^(\d+)/)?.[1] || 3);
+    const weight = parseFloat(ex.weightUsed);
+    const hasWeight = !isNaN(weight) && weight > 0;
 
-    if (ex.difficulty === 'easy' && reps >= progReps) {
+    if (ex.difficulty === 'easy' && reps >= progReps && reps <= progReps + 2) {
       suggestions.push({
-        type: 'exercise',
-        move: ex.move,
-        title: ex.move,
-        text: `Rated Easy and hit all reps at ${weight || progWeight} lb. Ready to add 5 lb next session?`,
-        action: 'add-weight',
-        phaseIdx: entry.phaseIdx,
-        sessionId: entry.sessionId,
-        progEx,
-        newWeight: (weight || progWeight) + 5,
+        type: 'exercise', move: ex.move, title: ex.move,
+        text: `Rated Easy, hit all ${reps} reps. Add 2 reps per set next session (${progReps} → ${progReps + 2}).`,
+        action: 'add-reps', phaseIdx: entry.phaseIdx, sessionId: entry.sessionId, progEx,
+        newReps: progReps + 2,
+      });
+    } else if (ex.difficulty === 'easy' && reps > progReps + 2) {
+      suggestions.push({
+        type: 'exercise', move: ex.move, title: ex.move,
+        text: `Exceeded target by ${reps - progReps} reps and rated Easy. Add a full set next session (${progSetsCount} → ${progSetsCount + 1} sets).`,
+        action: 'add-set', phaseIdx: entry.phaseIdx, sessionId: entry.sessionId, progEx,
+        newSets: progSetsCount + 1,
       });
     } else if (ex.difficulty === 'hard' && reps < progReps - 1) {
       suggestions.push({
-        type: 'exercise',
-        move: ex.move,
-        title: ex.move,
-        text: `Rated Hard and missed ${progReps - reps} reps. Drop weight by 5 lb next session and rebuild from there.`,
-        action: 'drop-weight',
-        phaseIdx: entry.phaseIdx,
-        sessionId: entry.sessionId,
-        progEx,
-        newWeight: Math.max(15, (weight || progWeight) - 5),
+        type: 'exercise', move: ex.move, title: ex.move,
+        text: `Rated Hard and missed ${Math.round(progReps - reps)} reps. Drop to ${progReps - 2} reps per set next session and rebuild.`,
+        action: 'drop-reps', phaseIdx: entry.phaseIdx, sessionId: entry.sessionId, progEx,
+        newReps: Math.max(4, progReps - 2),
       });
-    } else if (ex.difficulty === 'easy' && reps > progReps) {
+    } else if (ex.difficulty === 'hard' && reps >= progReps) {
       suggestions.push({
-        type: 'exercise',
-        move: ex.move,
-        title: ex.move,
-        text: `Rated Easy and exceeded reps (${reps} vs ${progReps} programmed). Add 1 rep per set next session.`,
-        action: 'add-reps',
-        phaseIdx: entry.phaseIdx,
-        sessionId: entry.sessionId,
-        progEx,
+        type: 'exercise', move: ex.move, title: ex.move,
+        text: `Hit all reps but rated Hard. Try a 3-second lowering phase next session — same load, more time under tension.`,
+        action: 'tempo-note', phaseIdx: entry.phaseIdx, sessionId: entry.sessionId, progEx,
       });
     }
   });
@@ -973,10 +1193,9 @@ function generateSuggestions(entry, allExercises) {
 function showSuggestions(suggestions, entry) {
   const overlay = document.getElementById('sugg-overlay');
   const inner = document.getElementById('sugg-overlay-inner');
-
   inner.innerHTML = `
     <div class="sugg-title">NEXT SESSION <span>TIPS</span></div>
-    <div class="sugg-sub">${suggestions.length} suggestion${suggestions.length > 1 ? 's' : ''} based on your log — tap to accept or dismiss</div>
+    <div class="sugg-sub">${suggestions.length} suggestion${suggestions.length > 1 ? 's' : ''} — tap to accept or dismiss</div>
     ${suggestions.map((s, i) => `
       <div class="sugg-card ${s.type === 'session' ? 'session-wide' : ''}" id="sugg-card-${i}">
         <div class="sugg-card-label ${s.type === 'session' ? 'session-wide' : ''}">${s.type === 'session' ? '⚡ SESSION-WIDE' : '💪 EXERCISE'}</div>
@@ -990,8 +1209,6 @@ function showSuggestions(suggestions, entry) {
     `).join('')}
     <button class="sugg-done-btn" onclick="closeSuggestions()">DONE</button>
   `;
-
-  // Store suggestions for acceptance handling
   overlay._suggestions = suggestions;
   overlay.classList.add('visible');
   overlay.scrollTop = 0;
@@ -1002,48 +1219,38 @@ function acceptSuggestion(i) {
   const s = overlay._suggestions[i];
   const card = document.getElementById(`sugg-card-${i}`);
 
-  if (s.action === 'add-weight' || s.action === 'drop-weight') {
+  if (s.action === 'add-reps' || s.action === 'drop-reps') {
     const key = overrideKey(s.phaseIdx, s.sessionId, s.move);
-    exerciseOverrides[key] = {
-      sets: s.progEx.sets,
-      load: `${s.newWeight} lb`,
-    };
+    const newSetsStr = s.progEx.sets.replace(/(\d+)([^×\d]*)$/, `${s.newReps}$2`);
+    exerciseOverrides[key] = { sets: newSetsStr, load: s.progEx.load };
     saveOverrides();
-  } else if (s.action === 'add-reps') {
+  } else if (s.action === 'add-set') {
     const key = overrideKey(s.phaseIdx, s.sessionId, s.move);
-    const currentSets = s.progEx.sets;
-    const match = currentSets.match(/^(\d+)×(\d+)/);
-    if (match) {
-      const newReps = parseInt(match[2]) + 1;
-      exerciseOverrides[key] = {
-        sets: currentSets.replace(/^(\d+)×(\d+)/, `${match[1]}×${newReps}`),
-        load: s.progEx.load,
-      };
-      saveOverrides();
-    }
-  } else if (s.action === 'add-set-all' || s.action === 'remove-set-all') {
+    const newSetsStr = s.progEx.sets.replace(/^\d+/, String(s.newSets));
+    exerciseOverrides[key] = { sets: newSetsStr, load: s.progEx.load };
+    saveOverrides();
+  } else if (s.action === 'tempo-note') {
+    const key = overrideKey(s.phaseIdx, s.sessionId, s.move);
+    exerciseOverrides[key] = { sets: s.progEx.sets, load: s.progEx.load, tempoNote: '3s eccentric' };
+    saveOverrides();
+  } else if (s.action === 'add-reps-all' || s.action === 'drop-reps-all') {
     const phase = allPhases[s.entry.phaseIdx];
     const session = phase.sessions.find(sess => sess.id === s.entry.sessionId);
     session.blocks.flatMap(b => b.sets).forEach(ex => {
       const key = overrideKey(s.entry.phaseIdx, s.entry.sessionId, ex.move);
-      const match = ex.sets.match(/^(\d+)×/);
+      const match = ex.sets.match(/(\d+)([^×\d]*)$/);
       if (match) {
         const curr = parseInt(match[1]);
-        const newSets = s.action === 'add-set-all' ? curr + 1 : Math.max(1, curr - 1);
-        exerciseOverrides[key] = {
-          sets: ex.sets.replace(/^\d+×/, `${newSets}×`),
-          load: ex.load,
-        };
+        const delta = s.action === 'add-reps-all' ? 2 : -2;
+        const newReps = Math.max(4, curr + delta);
+        exerciseOverrides[key] = { sets: ex.sets.replace(/(\d+)([^×\d]*)$/, `${newReps}$2`), load: ex.load };
       }
     });
     saveOverrides();
   }
 
-  // Mark accepted
   card.style.opacity = '0.4';
   card.querySelector('.sugg-actions').innerHTML = '<span style="color:#4caf72;font-family:\'DM Mono\',monospace;font-size:11px;">✓ Accepted — takes effect next session</span>';
-
-  // Refresh blocks so overrides show immediately
   renderBlocks();
 }
 
