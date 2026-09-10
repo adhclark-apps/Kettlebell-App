@@ -760,9 +760,19 @@ function logWorkout() {
   // Collect all exercises across all blocks
   const allExercises = session.blocks.flatMap(b => b.sets);
 
+  const todayISO = new Date().toISOString().split('T')[0];
+
   inner.innerHTML = `
     <div class="log-overlay-title">LOG <span>SESSION</span></div>
-    <div class="log-overlay-sub">${phase.label} · ${{D1:'Day 1',D2:'Day 2',D3:'Day 3'}[activeSession]} · ${new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</div>
+    <div class="log-overlay-sub">${phase.label} · ${{D1:'Day 1',D2:'Day 2',D3:'Day 3'}[activeSession]}</div>
+
+    <div class="log-ex-card" style="margin-bottom:14px;">
+      <div class="log-field" style="width:100%;">
+        <label>Session Date</label>
+        <input type="date" id="log-date" value="${todayISO}"
+          style="width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:16px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none;" />
+      </div>
+    </div>
 
     <div class="log-session-diff">
       <div class="log-session-diff-label">Overall Session Difficulty</div>
@@ -855,9 +865,14 @@ function submitLog() {
     };
   });
 
+  const dateEl = document.getElementById('log-date');
+  const selectedDate = dateEl && dateEl.value
+    ? new Date(dateEl.value + 'T12:00:00').toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'})
+    : new Date().toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
   const entry = {
     id: Date.now(),
-    date: new Date().toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'}),
+    date: selectedDate,
     session: dayLabels[activeSession],
     sessionId: activeSession,
     phaseIdx: activePhaseIdx,
