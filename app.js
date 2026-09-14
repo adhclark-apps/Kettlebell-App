@@ -596,7 +596,9 @@ function renderSessionTabs() {
 // ════════════════════════════════════════
 // WORKOUT TRACKING STATE
 // ════════════════════════════════════════
-// setTracking: { "bi-ei-si": { reps, diff } }
+// setTracking keys:
+//   main sets:      "bi-ei-si"
+//   superset sets:  "ss-bi-ei-si"
 let setTracking = {};
 let activeExKey = null; // "bi-ei" of currently active exercise
 
@@ -615,10 +617,11 @@ function parseSets(setsStr) {
   return m ? parseInt(m[1]) : 3;
 }
 
-// Get unique key for a set
-function setKey(bi, ei, si) { return `${bi}-${ei}-${si}`; }
+// Keys
+function setKey(bi, ei, si)   { return `${bi}-${ei}-${si}`; }
+function ssKey(bi, ei, si)    { return `ss-${bi}-${ei}-${si}`; }
 
-// Check if all sets for an exercise are done
+// Check if all main sets for an exercise are done
 function exDone(bi, ei, totalSets) {
   for (let si = 0; si < totalSets; si++) {
     if (!setTracking[setKey(bi, ei, si)]) return false;
@@ -626,16 +629,27 @@ function exDone(bi, ei, totalSets) {
   return true;
 }
 
-// Count total sets done across whole session
+// Check if all superset sets for an exercise are done
+function ssExDone(bi, ei, totalSets) {
+  for (let si = 0; si < totalSets; si++) {
+    if (!setTracking[ssKey(bi, ei, si)]) return false;
+  }
+  return true;
+}
+
+// Count total sets done (main + superset)
 function totalSetsDone() {
   return Object.keys(setTracking).length;
 }
 
-// Count total sets in session
+// Count total sets in session (main + superset)
 function totalSetsInSession() {
   const phase = allPhases[activePhaseIdx];
   const session = phase.sessions.find(s => s.id === activeSession);
-  return session.blocks.flatMap(b => b.sets).reduce((acc, ex) => acc + parseSets(ex.sets), 0);
+  return session.blocks.flatMap(b => b.sets).reduce((acc, ex) => {
+    const n = parseSets(ex.sets);
+    return acc + n + (ex.superset ? parseSets(ex.superset.sets) : 0);
+  }, 0);
 }
 
 function resetTracking() {
@@ -658,7 +672,6 @@ function renderBlocks() {
   const totalDone = totalSetsDone();
   const totalSets = totalSetsInSession();
 
-  // Progress bar
   const pct = totalSets > 0 ? Math.round((totalDone / totalSets) * 100) : 0;
   const progressHtml = `
     <div class="workout-progress-bar">
@@ -678,17 +691,23 @@ function renderBlocks() {
       const url = videos[ex.move];
       const watchBtn = url ? `<a class="watch-btn" href="${url}" target="_blank" rel="noopener"
         style="color:${color};border-color:${color}55;background:${color}18">▶ WATCH</a>` : '';
-      const allDone = exDone(bi, ei, numSets);
+
+      const ssNumSets = ex.superset ? parseSets(ex.superset.sets) : 0;
+      const mainAllDone = exDone(bi, ei, numSets);
+      const ssAllDone = ex.superset ? ssExDone(bi, ei, ssNumSets) : true;
+      const allDone = mainAllDone && ssAllDone;
       const isActive = activeExKey === `${bi}-${ei}`;
 
-      // Build set rows
+      // Build interleaved set rows: main set → superset set → main set → ...
       const setRows = Array.from({length: numSets}, (_, si) => {
         const k = setKey(bi, ei, si);
         const logged = setTracking[k];
-        const isActiveSet = !logged && isActive && !Object.keys(setTracking).some(key => key.startsWith(`${bi}-${ei}-`) && !setTracking[key] && parseInt(key.split('-')[2]) < si);
-        return `
+        const isActiveSet = !logged && isActive &&
+          !Array.from({length: si}, (__, i) => setKey(bi, ei, i)).some(pk => !setTracking[pk]);
+
+        const mainRow = `
           <div class="ex-set-row ${logged ? 'done' : ''} ${isActiveSet ? 'active-set' : ''}" id="set-${bi}-${ei}-${si}">
-            <button class="set-check-btn" onclick="checkSet(${bi},${ei},${si},${blockRest},'${ex.move.replace(/'/g,"\\'")}')">
+            <button class="set-check-btn" onclick="checkSet(${bi},${ei},${si},${blockRest},'${ex.move.replace(/'/g,"\\'")}'${ex.superset ? ',true' : ''})">
               ${logged ? '✓' : si + 1}
             </button>
             <span class="set-label">Set ${si + 1}</span>
@@ -698,27 +717,78 @@ function renderBlocks() {
                 <input type="number" inputmode="numeric" id="reps-${bi}-${ei}-${si}"
                   value="${logged ? logged.reps : ''}"
                   placeholder="${dispSets.match(/\d+$/)?.[0] || '8'}"
-                  ${logged ? 'disabled' : ''}
-                  style="${logged ? 'opacity:.5' : ''}" />
+                  ${logged ? 'disabled' : ''} style="${logged ? 'opacity:.5' : ''}" />
               </div>
               <div class="set-input-wrap">
                 <label>Weight</label>
                 <input type="number" inputmode="decimal" id="wt-${bi}-${ei}-${si}"
                   value="${logged ? logged.weight : ''}"
                   placeholder="${dispLoad.replace(/[^0-9.]/g,'') || '40'}"
-                  ${logged ? 'disabled' : ''}
-                  style="${logged ? 'opacity:.5' : ''}" />
+                  ${logged ? 'disabled' : ''} style="${logged ? 'opacity:.5' : ''}" />
               </div>
             </div>
             <div class="set-diff-mini">
-              <button title="Easy" onclick="setDiffMini(${bi},${ei},${si},'easy',this)"
+              <button title="Easy" onclick="setDiffMini('${bi}-${ei}-${si}','easy',this)"
                 class="${logged && logged.diff==='easy' ? 'sel-easy' : ''}" ${logged ? 'disabled' : ''}>😤</button>
-              <button title="Just Right" onclick="setDiffMini(${bi},${ei},${si},'right',this)"
+              <button title="Just Right" onclick="setDiffMini('${bi}-${ei}-${si}','right',this)"
                 class="${logged && logged.diff==='right' ? 'sel-right' : ''}" ${logged ? 'disabled' : ''}>✅</button>
-              <button title="Hard" onclick="setDiffMini(${bi},${ei},${si},'hard',this)"
+              <button title="Hard" onclick="setDiffMini('${bi}-${ei}-${si}','hard',this)"
                 class="${logged && logged.diff==='hard' ? 'sel-hard' : ''}" ${logged ? 'disabled' : ''}>🔥</button>
             </div>
           </div>`;
+
+        // Superset row immediately after its paired main set
+        let ssRow = '';
+        if (ex.superset) {
+          const sk = ssKey(bi, ei, si);
+          const ssLogged = setTracking[sk];
+          // Active if main set is done but superset isn't yet
+          const ssIsActive = logged && !ssLogged;
+          const ssWatchBtn = videos[ex.superset.move]
+            ? `<a class="watch-btn" href="${videos[ex.superset.move]}" target="_blank" rel="noopener"
+                style="color:#e8a000;border-color:#e8a00055;background:#e8a00018;font-size:9px;padding:3px 8px;">▶ WATCH</a>` : '';
+
+          ssRow = `
+            <div class="ex-set-row ${ssLogged ? 'done' : ''} ${ssIsActive ? 'active-set' : ''}"
+              id="ssset-${bi}-${ei}-${si}"
+              style="border-left:3px solid #e8a000;margin-left:8px;background:${ssLogged ? '' : 'rgba(232,160,0,.04)'};">
+              <button class="set-check-btn" onclick="checkSuperSet(${bi},${ei},${si},${blockRest},'${ex.superset.move.replace(/'/g,"\\'")}')"
+                style="border-color:#e8a000;${ssLogged ? 'background:#e8a000;' : ''}">
+                ${ssLogged ? '✓' : '⚡'}
+              </button>
+              <span class="set-label" style="color:#e8a000;">SS ${si + 1}</span>
+              <div class="set-inputs">
+                <div class="set-input-wrap">
+                  <label style="color:#e8a000;">Reps</label>
+                  <input type="number" inputmode="numeric" id="ssreps-${bi}-${ei}-${si}"
+                    value="${ssLogged ? ssLogged.reps : ''}"
+                    placeholder="${ex.superset.sets.match(/\d+$/)?.[0] || '8'}"
+                    ${ssLogged ? 'disabled' : ''} style="${ssLogged ? 'opacity:.5' : ''}" />
+                </div>
+                <div class="set-input-wrap">
+                  <label style="color:#e8a000;">Weight</label>
+                  <input type="number" inputmode="decimal" id="sswt-${bi}-${ei}-${si}"
+                    value="${ssLogged ? ssLogged.weight : ''}"
+                    placeholder="BW"
+                    ${ssLogged ? 'disabled' : ''} style="${ssLogged ? 'opacity:.5' : ''}" />
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end;">
+                <div style="font-size:10px;font-weight:700;color:#e8a000;white-space:nowrap;">${ex.superset.move}</div>
+                ${ssWatchBtn}
+                <div class="set-diff-mini" style="margin-top:2px;">
+                  <button title="Easy" onclick="setDiffMini('ss-${bi}-${ei}-${si}','easy',this)"
+                    class="${ssLogged && ssLogged.diff==='easy' ? 'sel-easy' : ''}" ${ssLogged ? 'disabled' : ''}>😤</button>
+                  <button title="Just Right" onclick="setDiffMini('ss-${bi}-${ei}-${si}','right',this)"
+                    class="${ssLogged && ssLogged.diff==='right' ? 'sel-right' : ''}" ${ssLogged ? 'disabled' : ''}>✅</button>
+                  <button title="Hard" onclick="setDiffMini('ss-${bi}-${ei}-${si}','hard',this)"
+                    class="${ssLogged && ssLogged.diff==='hard' ? 'sel-hard' : ''}" ${ssLogged ? 'disabled' : ''}>🔥</button>
+                </div>
+              </div>
+            </div>`;
+        }
+
+        return mainRow + ssRow;
       }).join('');
 
       return `
@@ -728,21 +798,6 @@ function renderBlocks() {
             ${ex.note ? `<div class="ex-note">${ex.note}</div>` : ''}
             <div class="ex-actions">${watchBtn}</div>
             <div class="ex-set-list">${setRows}</div>
-            ${ex.superset ? `
-              <div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px dashed var(--border2);border-radius:8px;">
-                <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--orange);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">⚡ Superset — no rest</div>
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                  <div>
-                    <div style="font-size:13px;font-weight:700;color:var(--text);">${ex.superset.move}</div>
-                    ${ex.superset.note ? `<div class="ex-note">${ex.superset.note}</div>` : ''}
-                    ${videos[ex.superset.move] ? `<a class="watch-btn" href="${videos[ex.superset.move]}" target="_blank" rel="noopener" style="color:var(--text3);border-color:var(--border2);background:transparent;margin-top:6px;display:inline-flex;">▶ WATCH</a>` : ''}
-                  </div>
-                  <div style="text-align:right;flex-shrink:0;">
-                    <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text3);">${ex.superset.sets}</div>
-                    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);">${ex.superset.load}</div>
-                  </div>
-                </div>
-              </div>` : ''}
           </div>
           <div class="ex-right">
             <div class="ex-sets" style="color:${color}">${dispSets}</div>
@@ -764,7 +819,6 @@ function renderBlocks() {
     </div>`;
   }).join('');
 
-  // Finish button — show when all sets done
   const finishBtn = totalDone > 0 && totalDone >= totalSets
     ? `<div class="finish-session-bar"><button class="finish-session-btn" onclick="finishSession()">🏁 FINISH & SAVE SESSION</button></div>`
     : '';
@@ -772,64 +826,83 @@ function renderBlocks() {
   document.getElementById('blocks-container').innerHTML = progressHtml + blocksHtml + finishBtn;
 }
 
-// ── SET DIFF SELECTION ──
-const pendingDiffs = {}; // "bi-ei-si" → diff before checkoff
+// ── SET DIFF SELECTION — unified key ──
+const pendingDiffs = {};
 
-function setDiffMini(bi, ei, si, val, btn) {
-  const k = setKey(bi, ei, si);
-  pendingDiffs[k] = val;
-  const row = document.getElementById(`set-${bi}-${ei}-${si}`);
-  row.querySelectorAll('.set-diff-mini button').forEach(b => {
+function setDiffMini(key, val, btn) {
+  pendingDiffs[key] = val;
+  btn.closest('.set-diff-mini').querySelectorAll('button').forEach(b => {
     b.classList.remove('sel-easy','sel-right','sel-hard');
   });
   btn.classList.add(`sel-${val}`);
 }
 
-// ── CHECK OFF A SET ──
-function checkSet(bi, ei, si, blockRest, moveName) {
+// ── CHECK OFF A MAIN SET ──
+// hasSuperset: if true, don't fire rest timer yet — wait for superset checkoff
+function checkSet(bi, ei, si, blockRest, moveName, hasSuperset=false) {
   const k = setKey(bi, ei, si);
-  if (setTracking[k]) return; // already done
+  if (setTracking[k]) return;
 
   const repsEl = document.getElementById(`reps-${bi}-${ei}-${si}`);
   const wtEl   = document.getElementById(`wt-${bi}-${ei}-${si}`);
   const diff   = pendingDiffs[k] || 'right';
 
-  setTracking[k] = {
-    reps:   repsEl ? repsEl.value : '',
-    weight: wtEl   ? wtEl.value   : '',
-    diff,
-  };
+  setTracking[k] = { reps: repsEl?.value || '', weight: wtEl?.value || '', diff };
   delete pendingDiffs[k];
-
   activeExKey = `${bi}-${ei}`;
 
-  // Advance to next incomplete exercise after timer
+  renderBlocks();
+  if (expandedBlock !== bi) { expandedBlock = bi; renderBlocks(); }
+
+  if (hasSuperset) {
+    // Highlight the superset row — no timer yet
+    setTimeout(() => {
+      const ssEl = document.getElementById(`ssset-${bi}-${ei}-${si}`);
+      if (ssEl) ssEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 200);
+  } else {
+    // No superset — fire rest timer as normal
+    const nextExKey = findNextExKey();
+    startAutoTimer(blockRest, moveName, nextExKey);
+  }
+}
+
+// ── CHECK OFF A SUPERSET SET ──
+function checkSuperSet(bi, ei, si, blockRest, moveName) {
+  const sk = ssKey(bi, ei, si);
+  if (setTracking[sk]) return;
+
+  const repsEl = document.getElementById(`ssreps-${bi}-${ei}-${si}`);
+  const wtEl   = document.getElementById(`sswt-${bi}-${ei}-${si}`);
+  const diff   = pendingDiffs[`ss-${bi}-${ei}-${si}`] || 'right';
+
+  setTracking[sk] = { reps: repsEl?.value || '', weight: wtEl?.value || '', diff };
+  delete pendingDiffs[`ss-${bi}-${ei}-${si}`];
+
+  renderBlocks();
+  if (expandedBlock !== bi) { expandedBlock = bi; renderBlocks(); }
+
+  // Now fire rest timer — superset is done
+  const nextExKey = findNextExKey();
+  startAutoTimer(blockRest, moveName, nextExKey);
+}
+
+// Find the next incomplete exercise key
+function findNextExKey() {
   const phase = allPhases[activePhaseIdx];
   const session = phase.sessions.find(s => s.id === activeSession);
-
-  // Find next incomplete set/exercise
-  let nextExKey = null;
-  outer: for (let b = 0; b < session.blocks.length; b++) {
+  for (let b = 0; b < session.blocks.length; b++) {
     for (let e = 0; e < session.blocks[b].sets.length; e++) {
       const ex = session.blocks[b].sets[e];
       const oKey = overrideKey(activePhaseIdx, activeSession, ex.move);
       const ov = exerciseOverrides[oKey];
       const dispSets = ov ? ov.sets : ex.sets;
       const n = parseSets(dispSets);
-      if (!exDone(b, e, n)) { nextExKey = `${b}-${e}`; break outer; }
+      const ssN = ex.superset ? parseSets(ex.superset.sets) : 0;
+      if (!exDone(b, e, n) || !ssExDone(b, e, ssN)) return `${b}-${e}`;
     }
   }
-
-  renderBlocks();
-
-  // Re-open block containing this exercise
-  if (expandedBlock !== bi) {
-    expandedBlock = bi;
-    renderBlocks();
-  }
-
-  // Auto-start rest timer with block default
-  startAutoTimer(blockRest, moveName, nextExKey);
+  return null;
 }
 
 // ── AUTO REST TIMER ──
@@ -896,6 +969,15 @@ function finishSession() {
         const k = setKey(bi, ei, si);
         if (setTracking[k]) setData.push(setTracking[k]);
       }
+      // Collect superset data separately
+      const ssSetData = [];
+      if (ex.superset) {
+        const ssN = parseSets(ex.superset.sets);
+        for (let si = 0; si < ssN; si++) {
+          const sk = ssKey(bi, ei, si);
+          if (setTracking[sk]) ssSetData.push(setTracking[sk]);
+        }
+      }
       const diffs = setData.map(s => s.diff).filter(Boolean);
       globalDiffs = globalDiffs.concat(diffs);
       const aggDiff = diffs.includes('hard') ? 'hard' : diffs.filter(d => d==='easy').length > diffs.length/2 ? 'easy' : 'right';
@@ -909,6 +991,16 @@ function finishSession() {
         repsCompleted: reps.length ? reps[0] : '',
         weightUsed: weights.length ? String(Math.max(...weights)) : '',
         difficulty: aggDiff,
+        superset: ex.superset && ssSetData.length ? {
+          move: ex.superset.move,
+          setsCompleted: String(ssSetData.length),
+          repsCompleted: ssSetData.map(s => s.reps).filter(Boolean)[0] || '',
+          weightUsed: ssSetData.map(s => parseFloat(s.weight)).filter(n => !isNaN(n) && n > 0).length
+            ? String(Math.max(...ssSetData.map(s => parseFloat(s.weight)).filter(n => !isNaN(n))))
+            : 'BW',
+          difficulty: ssSetData.map(s=>s.diff).includes('hard') ? 'hard'
+            : ssSetData.map(s=>s.diff).filter(d=>d==='easy').length > ssSetData.length/2 ? 'easy' : 'right',
+        } : null,
       });
     });
   });
@@ -938,9 +1030,15 @@ function finishSession() {
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
       <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Summary</div>
       ${exerciseData.map(e => `
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);padding:4px 0;border-bottom:1px solid var(--border);">
-          <span>${e.move}</span>
-          <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--orange);">${e.setsCompleted}×${e.repsCompleted||'?'} @ ${e.weightUsed||'?'} lb</span>
+        <div style="padding:4px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);">
+            <span>${e.move}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--orange);">${e.setsCompleted}×${e.repsCompleted||'?'} @ ${e.weightUsed||'?'} lb</span>
+          </div>
+          ${e.superset ? `<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:2px;padding-left:10px;">
+            <span>⚡ ${e.superset.move}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:9px;color:#e8a000;">${e.superset.setsCompleted}×${e.superset.repsCompleted||'?'} @ ${e.superset.weightUsed}</span>
+          </div>` : ''}
         </div>`).join('')}
     </div>
     <button class="log-submit-btn" onclick="submitFromTracking()">SAVE TO LOG</button>
@@ -1281,11 +1379,16 @@ function renderLog() {
       const reps   = ex.repsCompleted  ? ex.repsCompleted        : '';
       const weight = ex.weightUsed     ? ` @ ${ex.weightUsed} lb` : '';
       const volume = (sets || reps) ? ` — ${sets}${reps}${weight}` : (weight ? ` —${weight}` : '');
+      const ssLine = ex.superset ? `
+        <div class="log-entry-ex" style="padding-left:14px;border-color:#1a1a1a;">
+          <span style="color:#e8a000;">⚡ ${ex.superset.move}${ex.superset.setsCompleted ? ` — ${ex.superset.setsCompleted}×${ex.superset.repsCompleted||'?'} @ ${ex.superset.weightUsed}` : ''}</span>
+          <span class="log-entry-ex-diff ${diffColors[ex.superset.difficulty]||''}">${diffLabels[ex.superset.difficulty]||''}</span>
+        </div>` : '';
       return `
       <div class="log-entry-ex">
         <span>${ex.move}${volume}</span>
         <span class="log-entry-ex-diff ${diffColors[ex.difficulty] || ''}">${diffLabels[ex.difficulty] || ''}</span>
-      </div>`;
+      </div>${ssLine}`;
     }).join('') : '';
 
     return `
