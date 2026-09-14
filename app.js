@@ -905,6 +905,30 @@ function findNextExKey() {
   return null;
 }
 
+// ── AUDIO ALERT ──
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playBeep() {
+  try {
+    const ctx = getAudioCtx();
+    [[880, 0, 0.18], [660, 0.22, 0.18]].forEach(([freq, start, dur]) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime + start);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
+      osc.start(ctx.currentTime + start);
+      osc.stop(ctx.currentTime + start + dur + 0.05);
+    });
+  } catch(e) { /* silent fallback */ }
+}
+
 // ── AUTO REST TIMER ──
 function startAutoTimer(seconds, moveName, nextExKey) {
   clearInterval(timerInterval);
@@ -933,7 +957,7 @@ function startAutoTimer(seconds, moveName, nextExKey) {
       clearInterval(timerInterval);
       timerRunning = false;
       document.getElementById('timer-overlay').classList.remove('visible');
-      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]); playBeep();
       if (timerNextExKey) {
         activeExKey = timerNextExKey;
         timerNextExKey = null;
@@ -1180,7 +1204,7 @@ function toggleTimer() {
       if (timerRemaining <= 0) {
         clearInterval(timerInterval); timerRunning = false;
         document.getElementById('timer-overlay').classList.remove('visible');
-        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]); playBeep();
         if (timerNextExKey) {
           activeExKey = timerNextExKey;
           timerNextExKey = null;
