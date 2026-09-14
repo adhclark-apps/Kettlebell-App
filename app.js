@@ -85,8 +85,8 @@ const allPhases = [
            superset:{move:"Push-Ups", sets:"3×6", load:"Bodyweight", note:"Straight into push-ups after each row set"}},
         ]},
         { title:"Finisher — 6 min EMOM", sets:[
-          {move:"KB Goblet Squat",       sets:"6 reps", load:"40 lb", note:"Odd minutes — quality over speed"},
-          {move:"KB Plank Pull-Through", sets:"6/side", load:"40 lb", note:"Even minutes — hips stay perfectly square"},
+          {move:"KB Alternating Deadlift", sets:"6 reps", load:"40 lb", note:"Odd minutes — hip hinge focus, neutral spine"},
+          {move:"KB Plank Pull-Through",   sets:"6/side", load:"40 lb", note:"Even minutes — hips stay perfectly square"},
         ]},
       ]},
       { id:"D2", tag:"CONDITIONING + CORE", blocks:[
@@ -182,7 +182,7 @@ const allPhases = [
           {move:"Bottoms-Up Press",   sets:"3×5/side", load:"30 lb",   note:"New — grip and shoulder stability challenge"},
         ]},
         { title:"Finisher — 8 min EMOM", sets:[
-          {move:"KB Snatch",           sets:"5/side",  load:"40 lb", note:"Odd minutes — explosive hip"},
+          {move:"KB Push Press",       sets:"5/side",  load:"40 lb", note:"Odd minutes — leg drive into lockout"},
           {move:"KB Around the World", sets:"10/dir",  load:"40 lb", note:"Even minutes — control the bell path"},
         ]},
       ]},
@@ -275,7 +275,7 @@ const allPhases = [
           {move:"Bottoms-Up Press",   sets:"4×5/side", load:"35 lb",   note:"Heavier bell — zero grip compromise"},
         ]},
         { title:"Finisher — 10 min EMOM", sets:[
-          {move:"KB Snatch",                 sets:"6/side", load:"40 lb", note:"Odd minutes — max power"},
+          {move:"KB Goblet Squat",           sets:"8/side", load:"40 lb", note:"Odd minutes — sit deep, elbows track knees"},
           {move:"KB Pistol Squat (Assisted)",sets:"4/side", load:"26 lb", note:"Even minutes — counterweight assist"},
         ]},
       ]},
