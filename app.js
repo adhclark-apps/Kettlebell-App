@@ -74,48 +74,48 @@ const allPhases = [
     sessions:[
       { id:"D1", tag:"STRENGTH + POWER", blocks:[
         { title:"Power Block — 12 min", sets:[
-          {move:"KB Swing",        sets:"3×10",     load:"40 lb", note:"Hip hinge — drive with glutes, not back. Own this before going double."},
-          {move:"KB Push Press",   sets:"3×5/side", load:"40 lb", note:"Leg drive initiates — arm locks out fully overhead",
-           superset:{move:"Push-Ups", sets:"3×8", load:"Bodyweight", note:"Straight into push-ups after each set — no rest between"}},
+          {move:"KB Swing",        sets:"3×10",     numSets:3, load:"40 lb", note:"Hip hinge — drive with glutes, not back. Own this before going double."},
+          {move:"KB Push Press",   sets:"3×5/side", numSets:3, load:"40 lb", note:"Leg drive initiates — arm locks out fully overhead",
+           superset:{move:"Push-Ups", sets:"3×8", numSets:3, load:"Bodyweight", note:"Straight into push-ups after each set — no rest between"}},
         ]},
         { title:"Strength Superset — 15 min", sets:[
-          {move:"KB Goblet Squat", sets:"3×8",      load:"40 lb", note:"Single bell goblet — elbows in, brace hard, sit deep",
-           superset:{move:"Jump Squats", sets:"3×6", load:"Bodyweight", note:"Immediately after goblet squats — land soft, full depth"}},
-          {move:"Renegade Row",    sets:"3×4/side", load:"40 lb", note:"One bell only — zero hip rotation, core must win",
-           superset:{move:"Push-Ups", sets:"3×6", load:"Bodyweight", note:"Straight into push-ups after each row set"}},
+          {move:"KB Goblet Squat", sets:"3×8",      numSets:3, load:"40 lb", note:"Single bell goblet — elbows in, brace hard, sit deep",
+           superset:{move:"Jump Squats", sets:"3×6", numSets:3, load:"Bodyweight", note:"Immediately after goblet squats — land soft, full depth"}},
+          {move:"Renegade Row",    sets:"3×4/side", numSets:3, load:"40 lb", note:"One bell only — zero hip rotation, core must win",
+           superset:{move:"Push-Ups", sets:"3×6", numSets:3, load:"Bodyweight", note:"Straight into push-ups after each row set"}},
         ]},
         { title:"Finisher — 6 min EMOM", sets:[
-          {move:"KB Alternating Deadlift", sets:"6 reps", load:"40 lb", note:"Odd minutes — hip hinge focus, neutral spine"},
-          {move:"KB Plank Pull-Through",   sets:"6/side", load:"40 lb", note:"Even minutes — hips stay perfectly square"},
+          {move:"KB Alternating Deadlift", sets:"6 reps", numSets:1, load:"40 lb", note:"Odd minutes — hip hinge focus, neutral spine"},
+          {move:"KB Plank Pull-Through",   sets:"6/side", numSets:1, load:"40 lb", note:"Even minutes — hips stay perfectly square"},
         ]},
       ]},
       { id:"D2", tag:"CONDITIONING + CORE", blocks:[
         { title:"Ballistic Circuit — 15 min (3 rounds)", sets:[
-          {move:"Single-Arm KB Swing",    sets:"10/side", load:"40 lb", note:"Switch hands each set — crisp hip snap every rep"},
-          {move:"KB High Pull",           sets:"6/side",  load:"40 lb", note:"Elbow leads — not the wrist"},
-          {move:"KB Alternating Deadlift",sets:"8/side",  load:"40 lb", note:"Full hinge — neutral spine throughout",
-           superset:{move:"Jump Squats", sets:"8", load:"Bodyweight", note:"Explosive finisher at end of each circuit round — land soft"}},
+          {move:"Single-Arm KB Swing",    sets:"3×10/side", numSets:3, load:"40 lb", note:"Switch hands each set — crisp hip snap every rep"},
+          {move:"KB High Pull",           sets:"3×6/side",  numSets:3, load:"40 lb", note:"Elbow leads — not the wrist"},
+          {move:"KB Alternating Deadlift",sets:"3×8/side",  numSets:3, load:"40 lb", note:"Full hinge — neutral spine throughout",
+           superset:{move:"Jump Squats", sets:"3×8", numSets:3, load:"Bodyweight", note:"Explosive finisher at end of each circuit round — land soft"}},
         ]},
         { title:"Core Triplet — 10 min (3 rounds)", sets:[
-          {move:"KB Windmill",    sets:"4/side",        load:"40 lb", note:"3s lowering — slow and deliberate, feel the stretch"},
-          {move:"Suitcase Carry", sets:"30 yards/side", load:"40 lb", note:"Tall posture — never lean into the bell"},
-          {move:"KB Halo",        sets:"6/direction",   load:"40 lb", note:"Controlled arc — full shoulder mobility",
-           superset:{move:"Hollow Body Hold", sets:"20s", load:"Bodyweight", note:"After halos — flat back, lower back pressed to floor"}},
+          {move:"KB Windmill",    sets:"3×4/side",        numSets:3, load:"40 lb", note:"3s lowering — slow and deliberate, feel the stretch"},
+          {move:"Suitcase Carry", sets:"3×30 yards/side", numSets:3, load:"40 lb", note:"Tall posture — never lean into the bell"},
+          {move:"KB Halo",        sets:"3×6/direction",   numSets:3, load:"40 lb", note:"Controlled arc — full shoulder mobility",
+           superset:{move:"Hollow Body Hold", sets:"3×20s", numSets:3, load:"Bodyweight", note:"After halos — flat back, lower back pressed to floor"}},
         ]},
       ]},
       { id:"D3", tag:"PULL + BURN", blocks:[
         { title:"Hinge + Pull Block — 18 min", sets:[
-          {move:"KB Romanian Deadlift", sets:"3×8",      load:"40 lb", note:"Single bell — hamstring tension at bottom, don't round"},
-          {move:"KB Clean",             sets:"3×4/side", load:"40 lb", note:"Vertical path — punch elbow through the rack"},
-          {move:"Single-Arm KB Row",    sets:"3×8/side", load:"40 lb", note:"Full scapular retraction at the top",
-           superset:{move:"Inverted Row", sets:"3×6", load:"Bodyweight", note:"Under a table or low bar — chest to bar, control the descent"}},
-          {move:"KB Sumo Deadlift",     sets:"3×6",      load:"40 lb", note:"Single bell between legs — drive knees out hard"},
+          {move:"KB Romanian Deadlift", sets:"3×8",      numSets:3, load:"40 lb", note:"Single bell — hamstring tension at bottom, don't round"},
+          {move:"KB Clean",             sets:"3×4/side", numSets:3, load:"40 lb", note:"Vertical path — punch elbow through the rack"},
+          {move:"Single-Arm KB Row",    sets:"3×8/side", numSets:3, load:"40 lb", note:"Full scapular retraction at the top",
+           superset:{move:"Inverted Row", sets:"3×6", numSets:3, load:"Bodyweight", note:"Under a table or low bar — chest to bar, control the descent"}},
+          {move:"KB Sumo Deadlift",     sets:"3×6",      numSets:3, load:"40 lb", note:"Single bell between legs — drive knees out hard"},
         ]},
         { title:"Complex Finisher — 2 rounds (rest 90s)", sets:[
-          {move:"KB Clean + Press",       sets:"3/side",  load:"40 lb", note:"No pause between clean and press — fluid"},
-          {move:"KB Front Squat",         sets:"4 reps",  load:"40 lb", note:"Single bell rack — elbows stay up"},
-          {move:"KB Swing",               sets:"8 reps",  load:"40 lb", note:"Power reset every rep"},
-          {move:"KB Goblet Lateral Lunge",sets:"4/side",  load:"40 lb", note:"Adductor stretch at the bottom"},
+          {move:"KB Clean + Press",       sets:"2×3/side", numSets:2, load:"40 lb", note:"No pause between clean and press — fluid"},
+          {move:"KB Front Squat",         sets:"2×4 reps", numSets:2, load:"40 lb", note:"Single bell rack — elbows stay up"},
+          {move:"KB Swing",               sets:"2×8 reps", numSets:2, load:"40 lb", note:"Power reset every rep"},
+          {move:"KB Goblet Lateral Lunge",sets:"2×4/side", numSets:2, load:"40 lb", note:"Adductor stretch at the bottom"},
         ]},
       ]},
     ],
@@ -127,42 +127,42 @@ const allPhases = [
     sessions:[
       { id:"D1", tag:"STRENGTH + POWER", blocks:[
         { title:"Power Block — 18 min", sets:[
-          {move:"Double KB Swing",    sets:"6×10",     load:"2×40 lb", note:"Added set — maintain hip snap quality"},
-          {move:"Double KB Push Press",sets:"5×5",     load:"2×40 lb", note:"Both bells — full lockout every rep"},
+          {move:"Double KB Swing",    sets:"6×10", numSets:6,     load:"2×40 lb", note:"Added set — maintain hip snap quality"},
+          {move:"Double KB Push Press",sets:"5×5", numSets:5,     load:"2×40 lb", note:"Both bells — full lockout every rep"},
         ]},
         { title:"Strength Superset — 22 min", sets:[
-          {move:"Double Front Squat", sets:"5×6",      load:"2×40 lb", note:"Added set — 3s eccentric"},
-          {move:"KB Dead Clean",      sets:"4×5/side", load:"40 lb",   note:"Reset from floor each rep — explosive hip"},
+          {move:"Double Front Squat", sets:"5×6", numSets:5,      load:"2×40 lb", note:"Added set — 3s eccentric"},
+          {move:"KB Dead Clean",      sets:"4×5/side", numSets:4, load:"40 lb",   note:"Reset from floor each rep — explosive hip"},
         ]},
         { title:"Finisher — 10 min EMOM", sets:[
-          {move:"KB Goblet Squat",     sets:"10 reps", load:"40 lb", note:"Odd minutes — 2 more reps"},
-          {move:"KB Around the World", sets:"8/dir",   load:"40 lb", note:"Even minutes — new move, control the arc"},
+          {move:"KB Goblet Squat",     sets:"10 reps", numSets:1, load:"40 lb", note:"Odd minutes — 2 more reps"},
+          {move:"KB Around the World", sets:"8/dir", numSets:1,   load:"40 lb", note:"Even minutes — new move, control the arc"},
         ]},
       ]},
       { id:"D2", tag:"CONDITIONING + CORE", blocks:[
         { title:"Ballistic Circuit — 20 min (4 rounds)", sets:[
-          {move:"Hand-to-Hand Swing",     sets:"20 reps",    load:"40 lb", note:"Release and catch — stay rhythmic"},
-          {move:"KB High Pull",           sets:"10/side",    load:"40 lb", note:"2 more reps per set"},
-          {move:"KB Alternating Deadlift",sets:"12/side",    load:"40 lb", note:"2 more reps — maintain hip hinge"},
+          {move:"Hand-to-Hand Swing",     sets:"20 reps", numSets:1,    load:"40 lb", note:"Release and catch — stay rhythmic"},
+          {move:"KB High Pull",           sets:"10/side", numSets:1,    load:"40 lb", note:"2 more reps per set"},
+          {move:"KB Alternating Deadlift",sets:"12/side", numSets:1,    load:"40 lb", note:"2 more reps — maintain hip hinge"},
         ]},
         { title:"Core Triplet — 12 min (3 rounds)", sets:[
-          {move:"KB Windmill",      sets:"6/side",        load:"40 lb", note:"Added rep — still 3s down"},
-          {move:"KB Overhead Carry",sets:"40 yds/side",   load:"40 lb", note:"New carry — full lockout overhead"},
-          {move:"KB Halo",          sets:"10/dir",        load:"40 lb", note:"Added reps — smooth deliberate circles"},
+          {move:"KB Windmill",      sets:"6/side", numSets:1,        load:"40 lb", note:"Added rep — still 3s down"},
+          {move:"KB Overhead Carry",sets:"40 yds/side", numSets:1,   load:"40 lb", note:"New carry — full lockout overhead"},
+          {move:"KB Halo",          sets:"10/dir", numSets:1,        load:"40 lb", note:"Added reps — smooth deliberate circles"},
         ]},
       ]},
       { id:"D3", tag:"PULL + BURN", blocks:[
         { title:"Hinge + Pull Block — 22 min", sets:[
-          {move:"KB Romanian Deadlift",sets:"5×8",      load:"2×40 lb", note:"Added set — feel the stretch"},
-          {move:"KB Dead Clean",       sets:"5×5/side", load:"40 lb",   note:"Dead start — max hip drive each rep"},
-          {move:"Single-Arm KB Row",   sets:"5×8/side", load:"40 lb",   note:"Added set — squeeze at top"},
-          {move:"KB Sumo Deadlift",    sets:"5×6",      load:"2×40 lb", note:"Added set — full lockout"},
+          {move:"KB Romanian Deadlift",sets:"5×8", numSets:5,      load:"2×40 lb", note:"Added set — feel the stretch"},
+          {move:"KB Dead Clean",       sets:"5×5/side", numSets:5, load:"40 lb",   note:"Dead start — max hip drive each rep"},
+          {move:"Single-Arm KB Row",   sets:"5×8/side", numSets:5, load:"40 lb",   note:"Added set — squeeze at top"},
+          {move:"KB Sumo Deadlift",    sets:"5×6", numSets:5,      load:"2×40 lb", note:"Added set — full lockout"},
         ]},
         { title:"Complex Finisher — 4 rounds (rest 80s)", sets:[
-          {move:"KB Clean + Press",       sets:"5/side",  load:"40 lb",   note:"Added rep per side"},
-          {move:"KB Front Squat",         sets:"5 reps",  load:"2×40 lb", note:"Added rep — elbows stay up"},
-          {move:"KB Swing",               sets:"12 reps", load:"40 lb",   note:"Added reps — power reset each one"},
-          {move:"KB Squat to Press",      sets:"6/side",  load:"40 lb",   note:"New — squat drives the press overhead"},
+          {move:"KB Clean + Press",       sets:"5/side", numSets:1,  load:"40 lb",   note:"Added rep per side"},
+          {move:"KB Front Squat",         sets:"5 reps", numSets:1,  load:"2×40 lb", note:"Added rep — elbows stay up"},
+          {move:"KB Swing",               sets:"12 reps", numSets:1, load:"40 lb",   note:"Added reps — power reset each one"},
+          {move:"KB Squat to Press",      sets:"6/side", numSets:1,  load:"40 lb",   note:"New — squat drives the press overhead"},
         ]},
       ]},
     ],
@@ -174,42 +174,42 @@ const allPhases = [
     sessions:[
       { id:"D1", tag:"STRENGTH + POWER", blocks:[
         { title:"Power + Skill Block — 18 min", sets:[
-          {move:"KB Snatch",          sets:"5×5/side", load:"40 lb",   note:"New — punch through at top, soft lockout"},
-          {move:"Double KB Push Press",sets:"5×5",     load:"2×40 lb", note:"Own the dip-drive — leg power initiates"},
+          {move:"KB Snatch",          sets:"5×5/side", numSets:5, load:"40 lb",   note:"New — punch through at top, soft lockout"},
+          {move:"Double KB Push Press",sets:"5×5", numSets:5,     load:"2×40 lb", note:"Own the dip-drive — leg power initiates"},
         ]},
         { title:"Strength Superset — 20 min", sets:[
-          {move:"Double Front Squat", sets:"4×6",      load:"2×40 lb", note:"Reset volume — heavier loading next phase"},
-          {move:"Bottoms-Up Press",   sets:"3×5/side", load:"30 lb",   note:"New — grip and shoulder stability challenge"},
+          {move:"Double Front Squat", sets:"4×6", numSets:4,      load:"2×40 lb", note:"Reset volume — heavier loading next phase"},
+          {move:"Bottoms-Up Press",   sets:"3×5/side", numSets:3, load:"30 lb",   note:"New — grip and shoulder stability challenge"},
         ]},
         { title:"Finisher — 8 min EMOM", sets:[
-          {move:"KB Push Press",       sets:"5/side",  load:"40 lb", note:"Odd minutes — leg drive into lockout"},
-          {move:"KB Around the World", sets:"10/dir",  load:"40 lb", note:"Even minutes — control the bell path"},
+          {move:"KB Push Press",       sets:"5/side", numSets:1,  load:"40 lb", note:"Odd minutes — leg drive into lockout"},
+          {move:"KB Around the World", sets:"10/dir", numSets:1,  load:"40 lb", note:"Even minutes — control the bell path"},
         ]},
       ]},
       { id:"D2", tag:"CONDITIONING + CORE", blocks:[
         { title:"Ballistic Circuit — 20 min (4 rounds)", sets:[
-          {move:"Hand-to-Hand Swing",   sets:"20 reps",   load:"53 lb", note:"Heavier bell — same crisp rhythm"},
-          {move:"KB High Pull",         sets:"8/side",    load:"53 lb", note:"Heavier — control the top position"},
-          {move:"KB Single-Leg RDL",    sets:"6/side",    load:"40 lb", note:"New — balance and hamstring focus"},
+          {move:"Hand-to-Hand Swing",   sets:"20 reps", numSets:1,   load:"53 lb", note:"Heavier bell — same crisp rhythm"},
+          {move:"KB High Pull",         sets:"8/side", numSets:1,    load:"53 lb", note:"Heavier — control the top position"},
+          {move:"KB Single-Leg RDL",    sets:"6/side", numSets:1,    load:"40 lb", note:"New — balance and hamstring focus"},
         ]},
         { title:"Core Triplet — 12 min (3 rounds)", sets:[
-          {move:"KB Windmill",             sets:"5/side",      load:"40 lb", note:"Back to baseline vol — perfect form"},
-          {move:"KB Overhead Carry",       sets:"50 yds/side", load:"40 lb", note:"10 more yards — lockout tight"},
-          {move:"Suitcase + Overhead Carry",sets:"30 yds each",load:"40 lb", note:"New combo — both carries one pass"},
+          {move:"KB Windmill",             sets:"5/side", numSets:1,      load:"40 lb", note:"Back to baseline vol — perfect form"},
+          {move:"KB Overhead Carry",       sets:"50 yds/side", numSets:1, load:"40 lb", note:"10 more yards — lockout tight"},
+          {move:"Suitcase + Overhead Carry",sets:"30 yds each", numSets:1,load:"40 lb", note:"New combo — both carries one pass"},
         ]},
       ]},
       { id:"D3", tag:"PULL + BURN", blocks:[
         { title:"Hinge + Pull Block — 20 min", sets:[
-          {move:"KB Romanian Deadlift",sets:"4×8",      load:"2×53 lb", note:"Heavier bell — hamstring stretch every rep"},
-          {move:"Double KB Clean",     sets:"4×4",      load:"2×40 lb", note:"New — bilateral clean, rack position tight"},
-          {move:"Single-Arm KB Row",   sets:"4×8/side", load:"53 lb",   note:"Heavier — full pull to armpit"},
-          {move:"KB Sumo Deadlift",    sets:"4×6",      load:"2×53 lb", note:"Heavier — drive the floor away"},
+          {move:"KB Romanian Deadlift",sets:"4×8", numSets:4,      load:"2×53 lb", note:"Heavier bell — hamstring stretch every rep"},
+          {move:"Double KB Clean",     sets:"4×4", numSets:4,      load:"2×40 lb", note:"New — bilateral clean, rack position tight"},
+          {move:"Single-Arm KB Row",   sets:"4×8/side", numSets:4, load:"53 lb",   note:"Heavier — full pull to armpit"},
+          {move:"KB Sumo Deadlift",    sets:"4×6", numSets:4,      load:"2×53 lb", note:"Heavier — drive the floor away"},
         ]},
         { title:"Complex Finisher — 3 rounds (rest 90s)", sets:[
-          {move:"KB Snatch",             sets:"5/side",  load:"40 lb",   note:"Open with power"},
-          {move:"Double Front Squat",    sets:"5 reps",  load:"2×40 lb", note:"Into the rack — sit deep"},
-          {move:"KB Squat + Row Complex",sets:"6 reps",  load:"40 lb",   note:"New — squat, stand, row, repeat"},
-          {move:"KB Goblet Lateral Lunge",sets:"6/side", load:"40 lb",   note:"Close with mobility — deep stretch"},
+          {move:"KB Snatch",             sets:"5/side", numSets:1,  load:"40 lb",   note:"Open with power"},
+          {move:"Double Front Squat",    sets:"5 reps", numSets:1,  load:"2×40 lb", note:"Into the rack — sit deep"},
+          {move:"KB Squat + Row Complex",sets:"6 reps", numSets:1,  load:"40 lb",   note:"New — squat, stand, row, repeat"},
+          {move:"KB Goblet Lateral Lunge",sets:"6/side", numSets:1, load:"40 lb",   note:"Close with mobility — deep stretch"},
         ]},
       ]},
     ],
@@ -221,41 +221,41 @@ const allPhases = [
     sessions:[
       { id:"D1", tag:"STRENGTH + POWER", blocks:[
         { title:"Power Block — reduced", sets:[
-          {move:"KB Snatch",           sets:"3×5/side", load:"40 lb",   note:"Deload — 2 fewer sets, focus on precision"},
-          {move:"Double KB Push Press", sets:"3×5",     load:"2×40 lb", note:"Deload — quality over quantity"},
+          {move:"KB Snatch",           sets:"3×5/side", numSets:3, load:"40 lb",   note:"Deload — 2 fewer sets, focus on precision"},
+          {move:"Double KB Push Press", sets:"3×5", numSets:3,     load:"2×40 lb", note:"Deload — quality over quantity"},
         ]},
         { title:"Strength — reduced", sets:[
-          {move:"Double Front Squat",  sets:"3×6",      load:"2×40 lb", note:"Deload — perfect every rep"},
-          {move:"Bottoms-Up Press",    sets:"2×5/side", load:"30 lb",   note:"Deload — feel the stability demand"},
+          {move:"Double Front Squat",  sets:"3×6", numSets:3,      load:"2×40 lb", note:"Deload — perfect every rep"},
+          {move:"Bottoms-Up Press",    sets:"2×5/side", numSets:2, load:"30 lb",   note:"Deload — feel the stability demand"},
         ]},
         { title:"Easy flush — 5 min", sets:[
-          {move:"KB Halo",        sets:"2×8/dir",      load:"40 lb", note:"Shoulder mobility — easy and slow"},
-          {move:"Suitcase Carry", sets:"2×30 yds/side",load:"40 lb", note:"Light carry — posture check only"},
+          {move:"KB Halo",        sets:"2×8/dir", numSets:2,      load:"40 lb", note:"Shoulder mobility — easy and slow"},
+          {move:"Suitcase Carry", sets:"2×30 yds/side", numSets:2,load:"40 lb", note:"Light carry — posture check only"},
         ]},
       ]},
       { id:"D2", tag:"CONDITIONING + CORE", blocks:[
         { title:"Easy Ballistic — 15 min (3 rounds)", sets:[
-          {move:"Single-Arm KB Swing",sets:"10/side",   load:"40 lb", note:"Deload — relax the grip, feel the hip"},
-          {move:"KB High Pull",       sets:"6/side",    load:"40 lb", note:"Deload — light and controlled"},
-          {move:"KB Single-Leg RDL",  sets:"5/side",    load:"40 lb", note:"Balance focus — no grinding"},
+          {move:"Single-Arm KB Swing",sets:"10/side", numSets:1,   load:"40 lb", note:"Deload — relax the grip, feel the hip"},
+          {move:"KB High Pull",       sets:"6/side", numSets:1,    load:"40 lb", note:"Deload — light and controlled"},
+          {move:"KB Single-Leg RDL",  sets:"5/side", numSets:1,    load:"40 lb", note:"Balance focus — no grinding"},
         ]},
         { title:"Core — 10 min (2 rounds)", sets:[
-          {move:"KB Windmill",      sets:"4/side",       load:"40 lb", note:"Deload — slow and deliberate"},
-          {move:"KB Overhead Carry",sets:"30 yds/side",  load:"40 lb", note:"Deload — posture check"},
-          {move:"KB Around the World",sets:"6/dir",      load:"40 lb", note:"Deload — mobility flush"},
+          {move:"KB Windmill",      sets:"4/side", numSets:1,       load:"40 lb", note:"Deload — slow and deliberate"},
+          {move:"KB Overhead Carry",sets:"30 yds/side", numSets:1,  load:"40 lb", note:"Deload — posture check"},
+          {move:"KB Around the World",sets:"6/dir", numSets:1,      load:"40 lb", note:"Deload — mobility flush"},
         ]},
       ]},
       { id:"D3", tag:"PULL + BURN", blocks:[
         { title:"Hinge + Pull — reduced", sets:[
-          {move:"KB Romanian Deadlift",sets:"3×6",      load:"2×53 lb", note:"Deload — 2 fewer sets"},
-          {move:"Double KB Clean",     sets:"3×3",      load:"2×40 lb", note:"Deload — feel the rack position"},
-          {move:"Single-Arm KB Row",   sets:"3×6/side", load:"53 lb",   note:"Deload — full range only"},
-          {move:"KB Sumo Deadlift",    sets:"3×5",      load:"2×53 lb", note:"Deload — no grinding reps"},
+          {move:"KB Romanian Deadlift",sets:"3×6", numSets:3,      load:"2×53 lb", note:"Deload — 2 fewer sets"},
+          {move:"Double KB Clean",     sets:"3×3", numSets:3,      load:"2×40 lb", note:"Deload — feel the rack position"},
+          {move:"Single-Arm KB Row",   sets:"3×6/side", numSets:3, load:"53 lb",   note:"Deload — full range only"},
+          {move:"KB Sumo Deadlift",    sets:"3×5", numSets:3,      load:"2×53 lb", note:"Deload — no grinding reps"},
         ]},
         { title:"Light Complex — 2 rounds only", sets:[
-          {move:"KB Snatch",             sets:"4/side",  load:"40 lb",   note:"Deload — easy power"},
-          {move:"Double Front Squat",    sets:"4 reps",  load:"2×40 lb", note:"Deload — perfect mechanics"},
-          {move:"KB Goblet Lateral Lunge",sets:"5/side", load:"40 lb",   note:"Deload — adductor flush"},
+          {move:"KB Snatch",             sets:"4/side", numSets:1,  load:"40 lb",   note:"Deload — easy power"},
+          {move:"Double Front Squat",    sets:"4 reps", numSets:1,  load:"2×40 lb", note:"Deload — perfect mechanics"},
+          {move:"KB Goblet Lateral Lunge",sets:"5/side", numSets:1, load:"40 lb",   note:"Deload — adductor flush"},
         ]},
       ]},
     ],
@@ -267,42 +267,42 @@ const allPhases = [
     sessions:[
       { id:"D1", tag:"STRENGTH + POWER", blocks:[
         { title:"Skill + Power Block — 20 min", sets:[
-          {move:"Turkish Get-Up",     sets:"3×2/side", load:"40 lb",   note:"New — own every position, 60s per rep minimum"},
-          {move:"KB Snatch",          sets:"5×6/side", load:"40 lb",   note:"Added rep — stay explosive throughout"},
+          {move:"Turkish Get-Up",     sets:"3×2/side", numSets:3, load:"40 lb",   note:"New — own every position, 60s per rep minimum"},
+          {move:"KB Snatch",          sets:"5×6/side", numSets:5, load:"40 lb",   note:"Added rep — stay explosive throughout"},
         ]},
         { title:"Strength Superset — 20 min", sets:[
-          {move:"Double KB Front Squat",sets:"4×6",    load:"2×53 lb", note:"Heavier — rack position critical at 6'6\""},
-          {move:"Bottoms-Up Press",   sets:"4×5/side", load:"35 lb",   note:"Heavier bell — zero grip compromise"},
+          {move:"Double KB Front Squat",sets:"4×6", numSets:4,    load:"2×53 lb", note:"Heavier — rack position critical at 6'6\""},
+          {move:"Bottoms-Up Press",   sets:"4×5/side", numSets:4, load:"35 lb",   note:"Heavier bell — zero grip compromise"},
         ]},
         { title:"Finisher — 10 min EMOM", sets:[
-          {move:"KB Goblet Squat",           sets:"8/side", load:"40 lb", note:"Odd minutes — sit deep, elbows track knees"},
-          {move:"KB Pistol Squat (Assisted)",sets:"4/side", load:"26 lb", note:"Even minutes — counterweight assist"},
+          {move:"KB Goblet Squat",           sets:"8/side", numSets:1, load:"40 lb", note:"Odd minutes — sit deep, elbows track knees"},
+          {move:"KB Pistol Squat (Assisted)",sets:"4/side", numSets:1, load:"26 lb", note:"Even minutes — counterweight assist"},
         ]},
       ]},
       { id:"D2", tag:"CONDITIONING + CORE", blocks:[
         { title:"Ballistic Circuit — 20 min (4 rounds)", sets:[
-          {move:"Hand-to-Hand Swing",   sets:"20 reps",   load:"62 lb", note:"Peak swing load — maximum hip power"},
-          {move:"KB Snatch",            sets:"6/side",    load:"40 lb", note:"Added reps — crisp punch-through"},
-          {move:"KB Single-Leg RDL",    sets:"8/side",    load:"40 lb", note:"Added reps — own the balance"},
+          {move:"Hand-to-Hand Swing",   sets:"20 reps", numSets:1,   load:"62 lb", note:"Peak swing load — maximum hip power"},
+          {move:"KB Snatch",            sets:"6/side", numSets:1,    load:"40 lb", note:"Added reps — crisp punch-through"},
+          {move:"KB Single-Leg RDL",    sets:"8/side", numSets:1,    load:"40 lb", note:"Added reps — own the balance"},
         ]},
         { title:"Core Triplet — 12 min (3 rounds)", sets:[
-          {move:"KB Snatch + Windmill", sets:"3/side",       load:"40 lb", note:"New combo — snatch up, windmill back down"},
-          {move:"Bottoms-Up Carry",     sets:"30 yds/side",  load:"35 lb", note:"New — inverted bell, supreme stability"},
-          {move:"KB Around the World",  sets:"10/dir",       load:"40 lb", note:"Shoulder mobility maintenance"},
+          {move:"KB Snatch + Windmill", sets:"3/side", numSets:1,       load:"40 lb", note:"New combo — snatch up, windmill back down"},
+          {move:"Bottoms-Up Carry",     sets:"30 yds/side", numSets:1,  load:"35 lb", note:"New — inverted bell, supreme stability"},
+          {move:"KB Around the World",  sets:"10/dir", numSets:1,       load:"40 lb", note:"Shoulder mobility maintenance"},
         ]},
       ]},
       { id:"D3", tag:"PULL + BURN", blocks:[
         { title:"Hinge + Skill Block — 22 min", sets:[
-          {move:"Turkish Get-Up",        sets:"3×2/side", load:"40 lb",   note:"Skill focus — every position deliberate"},
-          {move:"KB Romanian Deadlift",  sets:"4×8",      load:"2×62 lb", note:"Heaviest yet — control every inch"},
-          {move:"Double KB Clean",       sets:"4×5",      load:"2×40 lb", note:"Added rep — rack punch stays crisp"},
-          {move:"KB Clean + Front Squat",sets:"4×4/side", load:"40 lb",   note:"New complex — clean feeds the squat"},
+          {move:"Turkish Get-Up",        sets:"3×2/side", numSets:3, load:"40 lb",   note:"Skill focus — every position deliberate"},
+          {move:"KB Romanian Deadlift",  sets:"4×8", numSets:4,      load:"2×62 lb", note:"Heaviest yet — control every inch"},
+          {move:"Double KB Clean",       sets:"4×5", numSets:4,      load:"2×40 lb", note:"Added rep — rack punch stays crisp"},
+          {move:"KB Clean + Front Squat",sets:"4×4/side", numSets:4, load:"40 lb",   note:"New complex — clean feeds the squat"},
         ]},
         { title:"Complex Finisher — 4 rounds (rest 90s)", sets:[
-          {move:"KB Snatch",                 sets:"5/side",   load:"40 lb",   note:"Power opener"},
-          {move:"Double KB Front Squat",     sets:"5 reps",   load:"2×53 lb", note:"Heavier squat"},
-          {move:"Bottoms-Up Press",          sets:"4/side",   load:"35 lb",   note:"Stability press"},
-          {move:"KB Pistol Squat (Assisted)",sets:"4/side",   load:"26 lb",   note:"Strength closer"},
+          {move:"KB Snatch",                 sets:"5/side", numSets:1,   load:"40 lb",   note:"Power opener"},
+          {move:"Double KB Front Squat",     sets:"5 reps", numSets:1,   load:"2×53 lb", note:"Heavier squat"},
+          {move:"Bottoms-Up Press",          sets:"4/side", numSets:1,   load:"35 lb",   note:"Stability press"},
+          {move:"KB Pistol Squat (Assisted)",sets:"4/side", numSets:1,   load:"26 lb",   note:"Strength closer"},
         ]},
       ]},
     ],
@@ -314,41 +314,41 @@ const allPhases = [
     sessions:[
       { id:"D1", tag:"STRENGTH + POWER", blocks:[
         { title:"Skill + Power Block — 22 min", sets:[
-          {move:"Turkish Get-Up",      sets:"4×2/side",      load:"53 lb",   note:"Peak TGU — every position still perfect"},
-          {move:"KB Snatch Complex",   sets:"4×(5+5)/side",  load:"40 lb",   note:"Snatch 5 reps, hold overhead, 5 windmills"},
+          {move:"Turkish Get-Up",      sets:"4×2/side", numSets:4,      load:"53 lb",   note:"Peak TGU — every position still perfect"},
+          {move:"KB Snatch Complex",   sets:"4×(5+5)/side", numSets:4,  load:"40 lb",   note:"Snatch 5 reps, hold overhead, 5 windmills"},
         ]},
         { title:"Strength Superset — 20 min", sets:[
-          {move:"Double KB Front Squat",sets:"5×5",          load:"2×53 lb", note:"Peak squat load — 3s eccentric always"},
-          {move:"Bottoms-Up Press",    sets:"4×6/side",      load:"40 lb",   note:"Peak BU press — zero wobble"},
+          {move:"Double KB Front Squat",sets:"5×5", numSets:5,          load:"2×53 lb", note:"Peak squat load — 3s eccentric always"},
+          {move:"Bottoms-Up Press",    sets:"4×6/side", numSets:4,      load:"40 lb",   note:"Peak BU press — zero wobble"},
         ]},
         { title:"Finisher — 12 min EMOM", sets:[
-          {move:"KB Snatch",                 sets:"8/side", load:"40 lb", note:"Odd minutes — max power output"},
-          {move:"KB Pistol Squat (Assisted)",sets:"5/side", load:"26 lb", note:"Even minutes — strength and balance"},
+          {move:"KB Snatch",                 sets:"8/side", numSets:1, load:"40 lb", note:"Odd minutes — max power output"},
+          {move:"KB Pistol Squat (Assisted)",sets:"5/side", numSets:1, load:"26 lb", note:"Even minutes — strength and balance"},
         ]},
       ]},
       { id:"D2", tag:"CONDITIONING + CORE", blocks:[
         { title:"Ballistic Circuit — 20 min (5 rounds)", sets:[
-          {move:"Double KB Swing",      sets:"12 reps",   load:"2×62 lb", note:"Peak double swing — max hip power"},
-          {move:"KB Snatch",            sets:"8/side",    load:"40 lb",   note:"Added reps — keep the punch-through"},
-          {move:"KB Single-Leg RDL",    sets:"8/side",    load:"53 lb",   note:"Heavier — balance is fully earned now"},
+          {move:"Double KB Swing",      sets:"12 reps", numSets:1,   load:"2×62 lb", note:"Peak double swing — max hip power"},
+          {move:"KB Snatch",            sets:"8/side", numSets:1,    load:"40 lb",   note:"Added reps — keep the punch-through"},
+          {move:"KB Single-Leg RDL",    sets:"8/side", numSets:1,    load:"53 lb",   note:"Heavier — balance is fully earned now"},
         ]},
         { title:"Core Triplet — 12 min (3 rounds)", sets:[
-          {move:"Turkish Get-Up + Press",sets:"2/side",      load:"53 lb", note:"TGU with an extra press at the top"},
-          {move:"Bottoms-Up Carry",     sets:"40 yds/side",  load:"40 lb", note:"Heavier carry — supreme stability"},
-          {move:"KB Snatch + Windmill", sets:"4/side",       load:"40 lb", note:"Snatch up, windmill down — fluid chain"},
+          {move:"Turkish Get-Up + Press",sets:"2/side", numSets:1,      load:"53 lb", note:"TGU with an extra press at the top"},
+          {move:"Bottoms-Up Carry",     sets:"40 yds/side", numSets:1,  load:"40 lb", note:"Heavier carry — supreme stability"},
+          {move:"KB Snatch + Windmill", sets:"4/side", numSets:1,       load:"40 lb", note:"Snatch up, windmill down — fluid chain"},
         ]},
       ]},
       { id:"D3", tag:"PULL + BURN", blocks:[
         { title:"Hinge + Skill — 22 min", sets:[
-          {move:"Turkish Get-Up",        sets:"4×2/side", load:"53 lb",   note:"Peak TGU load — deliberate and slow"},
-          {move:"KB Romanian Deadlift",  sets:"5×8",      load:"2×62 lb", note:"Peak hinge load — feel every inch"},
-          {move:"Double KB Clean",       sets:"5×5",      load:"2×53 lb", note:"Heavier double clean — rack stays crisp"},
-          {move:"KB Clean + Front Squat",sets:"5×4/side", load:"53 lb",   note:"Heavier complex — peak pull + squat"},
+          {move:"Turkish Get-Up",        sets:"4×2/side", numSets:4, load:"53 lb",   note:"Peak TGU load — deliberate and slow"},
+          {move:"KB Romanian Deadlift",  sets:"5×8", numSets:5,      load:"2×62 lb", note:"Peak hinge load — feel every inch"},
+          {move:"Double KB Clean",       sets:"5×5", numSets:5,      load:"2×53 lb", note:"Heavier double clean — rack stays crisp"},
+          {move:"KB Clean + Front Squat",sets:"5×4/side", numSets:5, load:"53 lb",   note:"Heavier complex — peak pull + squat"},
         ]},
         { title:"Peak Complex — 4 rounds (rest 90s)", sets:[
-          {move:"KB Full Complex",            sets:"(C+P+Sq) ×4/side", load:"53 lb",   note:"Clean + Press + Squat chained — one fluid movement"},
-          {move:"Double KB Snatch",           sets:"5 reps",           load:"2×40 lb", note:"Bilateral explosive power — hardest move in program"},
-          {move:"KB Pistol Squat (Assisted)", sets:"5/side",           load:"26 lb",   note:"Strength finisher — go deep"},
+          {move:"KB Full Complex",            sets:"(C+P+Sq) ×4/side", numSets:1, load:"53 lb",   note:"Clean + Press + Squat chained — one fluid movement"},
+          {move:"Double KB Snatch",           sets:"5 reps", numSets:1,           load:"2×40 lb", note:"Bilateral explosive power — hardest move in program"},
+          {move:"KB Pistol Squat (Assisted)", sets:"5/side", numSets:1,           load:"26 lb",   note:"Strength finisher — go deep"},
         ]},
       ]},
     ],
@@ -547,7 +547,7 @@ function switchPhase(i) {
   activePhaseIdx = i;
   activeSession = 'D1';
   expandedBlock = null;
-  resetTracking();
+  loadTracking();
   renderPhaseSelector();
   renderPhaseBanner();
   renderSessionTabs();
@@ -574,7 +574,7 @@ function renderPhaseBanner() {
 function switchSession(sid) {
   activeSession = sid;
   expandedBlock = null;
-  resetTracking();
+  loadTracking();
   renderSessionTabs();
   renderBlocks();
 }
@@ -611,10 +611,17 @@ function restDefaultForBlock(title) {
   return 60;
 }
 
-// Parse set count from programmed string e.g. "3×10" → 3, "4×5/side" → 4
-function parseSets(setsStr) {
-  const m = setsStr.match(/^(\d+)/);
-  return m ? parseInt(m[1]) : 3;
+// Parse set count from programmed string
+// "3×10" → 3, "4×5/side" → 4, "10/side" → 1 (no ×, treat as 1 set/round), "6 reps" → 1
+// For EMOM/circuit exercises without × notation, always use ex.numSets if provided
+function parseSets(setsStr, fallback) {
+  if (!setsStr) return fallback || 3;
+  // Only trust the number before × as the SET count
+  const crossMatch = setsStr.match(/^(\d+)\s*[×x]/);
+  if (crossMatch) return parseInt(crossMatch[1]);
+  // No × — this is a reps-only string (e.g. "10/side", "8 reps", "20s")
+  // Return the fallback (numSets from exercise data) or 1
+  return fallback || 1;
 }
 
 // Keys
@@ -647,14 +654,39 @@ function totalSetsInSession() {
   const phase = allPhases[activePhaseIdx];
   const session = phase.sessions.find(s => s.id === activeSession);
   return session.blocks.flatMap(b => b.sets).reduce((acc, ex) => {
-    const n = parseSets(ex.sets);
-    return acc + n + (ex.superset ? parseSets(ex.superset.sets) : 0);
+    const n = ex.numSets || parseSets(ex.sets);
+    const ssN = ex.superset ? (ex.superset.numSets || parseSets(ex.superset.sets)) : 0;
+    return acc + n + ssN;
   }, 0);
 }
 
 function resetTracking() {
   setTracking = {};
   activeExKey = null;
+  localStorage.removeItem('kbActiveSession');
+}
+
+function saveTracking() {
+  const key = `kbTracking-${activePhaseIdx}-${activeSession}`;
+  localStorage.setItem(key, JSON.stringify({ setTracking, activeExKey }));
+  localStorage.setItem('kbActiveSession', JSON.stringify({ phaseIdx: activePhaseIdx, sessionId: activeSession }));
+}
+
+function loadTracking() {
+  const key = `kbTracking-${activePhaseIdx}-${activeSession}`;
+  const saved = localStorage.getItem(key);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      setTracking = data.setTracking || {};
+      activeExKey = data.activeExKey || null;
+      return true;
+    } catch(e) { setTracking = {}; activeExKey = null; }
+  } else {
+    setTracking = {};
+    activeExKey = null;
+  }
+  return false;
 }
 
 // ════════════════════════════════════════
@@ -687,16 +719,18 @@ function renderBlocks() {
       const ov = exerciseOverrides[oKey];
       const dispSets = ov ? ov.sets : ex.sets;
       const dispLoad = ov ? ov.load : ex.load;
-      const numSets = parseSets(dispSets);
+      const numSets = ex.numSets || parseSets(dispSets);
       const url = videos[ex.move];
       const watchBtn = url ? `<a class="watch-btn" href="${url}" target="_blank" rel="noopener"
         style="color:${color};border-color:${color}55;background:${color}18">▶ WATCH</a>` : '';
 
-      const ssNumSets = ex.superset ? parseSets(ex.superset.sets) : 0;
+      const ssNumSets = ex.superset ? (ex.superset.numSets || parseSets(ex.superset.sets)) : 0;
       const mainAllDone = exDone(bi, ei, numSets);
       const ssAllDone = ex.superset ? ssExDone(bi, ei, ssNumSets) : true;
       const allDone = mainAllDone && ssAllDone;
       const isActive = activeExKey === `${bi}-${ei}`;
+      // Rep placeholder: extract last number from sets string e.g. "3×10/side" → "10"
+      const repPlaceholder = dispSets.match(/×(\d+)/)?.[1] || dispSets.match(/^(\d+)/)?.[1] || '8';
 
       // Build interleaved set rows: main set → superset set → main set → ...
       const setRows = Array.from({length: numSets}, (_, si) => {
@@ -716,24 +750,22 @@ function renderBlocks() {
                 <label>Reps</label>
                 <input type="number" inputmode="numeric" id="reps-${bi}-${ei}-${si}"
                   value="${logged ? logged.reps : ''}"
-                  placeholder="${dispSets.match(/\d+$/)?.[0] || '8'}"
-                  ${logged ? 'disabled' : ''} style="${logged ? 'opacity:.5' : ''}" />
+                  placeholder="${repPlaceholder}" />
               </div>
               <div class="set-input-wrap">
                 <label>Weight</label>
                 <input type="number" inputmode="decimal" id="wt-${bi}-${ei}-${si}"
                   value="${logged ? logged.weight : ''}"
-                  placeholder="${dispLoad.replace(/[^0-9.]/g,'') || '40'}"
-                  ${logged ? 'disabled' : ''} style="${logged ? 'opacity:.5' : ''}" />
+                  placeholder="${dispLoad.replace(/[^0-9.]/g,'') || '40'}" />
               </div>
             </div>
             <div class="set-diff-mini">
               <button title="Easy" onclick="setDiffMini('${bi}-${ei}-${si}','easy',this)"
-                class="${logged && logged.diff==='easy' ? 'sel-easy' : ''}" ${logged ? 'disabled' : ''}>😤</button>
+                class="${logged && logged.diff==='easy' ? 'sel-easy' : ''}">😤</button>
               <button title="Just Right" onclick="setDiffMini('${bi}-${ei}-${si}','right',this)"
-                class="${logged && logged.diff==='right' ? 'sel-right' : ''}" ${logged ? 'disabled' : ''}>✅</button>
+                class="${logged && logged.diff==='right' ? 'sel-right' : ''}">✅</button>
               <button title="Hard" onclick="setDiffMini('${bi}-${ei}-${si}','hard',this)"
-                class="${logged && logged.diff==='hard' ? 'sel-hard' : ''}" ${logged ? 'disabled' : ''}>🔥</button>
+                class="${logged && logged.diff==='hard' ? 'sel-hard' : ''}">🔥</button>
             </div>
           </div>`;
 
@@ -850,6 +882,7 @@ function checkSet(bi, ei, si, blockRest, moveName, hasSuperset=false) {
   setTracking[k] = { reps: repsEl?.value || '', weight: wtEl?.value || '', diff };
   delete pendingDiffs[k];
   activeExKey = `${bi}-${ei}`;
+  saveTracking();
 
   renderBlocks();
   if (expandedBlock !== bi) { expandedBlock = bi; renderBlocks(); }
@@ -878,6 +911,7 @@ function checkSuperSet(bi, ei, si, blockRest, moveName) {
 
   setTracking[sk] = { reps: repsEl?.value || '', weight: wtEl?.value || '', diff };
   delete pendingDiffs[`ss-${bi}-${ei}-${si}`];
+  saveTracking();
 
   renderBlocks();
   if (expandedBlock !== bi) { expandedBlock = bi; renderBlocks(); }
@@ -897,8 +931,8 @@ function findNextExKey() {
       const oKey = overrideKey(activePhaseIdx, activeSession, ex.move);
       const ov = exerciseOverrides[oKey];
       const dispSets = ov ? ov.sets : ex.sets;
-      const n = parseSets(dispSets);
-      const ssN = ex.superset ? parseSets(ex.superset.sets) : 0;
+      const n = ex.numSets || parseSets(dispSets);
+      const ssN = ex.superset ? (ex.superset.numSets || parseSets(ex.superset.sets)) : 0;
       if (!exDone(b, e, n) || !ssExDone(b, e, ssN)) return `${b}-${e}`;
     }
   }
@@ -987,7 +1021,7 @@ function finishSession() {
       const ov = exerciseOverrides[oKey];
       const dispSets = ov ? ov.sets : ex.sets;
       const dispLoad = ov ? ov.load : ex.load;
-      const numSets = parseSets(dispSets);
+      const numSets = ex.numSets || parseSets(dispSets);
       const setData = [];
       for (let si = 0; si < numSets; si++) {
         const k = setKey(bi, ei, si);
@@ -1101,6 +1135,9 @@ function submitFromTracking() {
 
   workoutLog.unshift(entry);
   localStorage.setItem('kbLog', JSON.stringify(workoutLog));
+  // Clear the in-progress tracking for this session
+  localStorage.removeItem(`kbTracking-${entry.phaseIdx}-${entry.sessionId}`);
+  localStorage.removeItem('kbActiveSession');
   closeLogOverlay();
   resetTracking();
   renderBlocks();
@@ -1509,6 +1546,19 @@ function clearOverrides() {
 // ════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════
+// Restore last active session
+try {
+  const savedSess = localStorage.getItem('kbActiveSession');
+  if (savedSess) {
+    const s = JSON.parse(savedSess);
+    if (typeof s.phaseIdx === 'number' && s.phaseIdx >= 0 && s.phaseIdx < allPhases.length) {
+      activePhaseIdx = s.phaseIdx;
+      activeSession = s.sessionId;
+    }
+  }
+} catch(e) {}
+
+loadTracking();
 renderPhaseSelector();
 renderPhaseBanner();
 renderSessionTabs();
